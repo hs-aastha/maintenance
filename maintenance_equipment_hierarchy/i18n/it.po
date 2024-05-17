@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-06-10 11:09+0000\n"
+"PO-Revision-Date: 2023-06-10 11:08+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -22,11 +22,10 @@ msgid "Child Equipments"
 msgstr "Attrezzature discendenti"
 
 #. module: maintenance_equipment_hierarchy
-#. odoo-python
 #: code:addons/maintenance_equipment_hierarchy/models/maintenance_equipment.py:0
 #, python-format
 msgid "Child equipment of %s"
-msgstr "Attrezzatura figlia di %s"
+msgstr "Attrezzature discendenti da %s"
 
 #. module: maintenance_equipment_hierarchy
 #: model_terms:ir.ui.view,arch_db:maintenance_equipment_hierarchy.hr_equipment_view_form
@@ -52,6 +51,16 @@ msgstr "Batteria laptop HP"
 #: model:maintenance.equipment,name:maintenance_equipment_hierarchy.equipment_computer9_2
 msgid "HP Laptop case"
 msgstr "Case laptop HP"
+
+#. module: maintenance_equipment_hierarchy
+#: model:ir.model.fields,field_description:maintenance_equipment_hierarchy.field_maintenance_equipment__id
+msgid "ID"
+msgstr "ID"
+
+#. module: maintenance_equipment_hierarchy
+#: model:ir.model.fields,field_description:maintenance_equipment_hierarchy.field_maintenance_equipment____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
 
 #. module: maintenance_equipment_hierarchy
 #: model:ir.model.fields,field_description:maintenance_equipment_hierarchy.field_maintenance_equipment__parent_left

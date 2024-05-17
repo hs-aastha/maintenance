@@ -27,10 +27,8 @@ class MaintenanceEquipment(models.Model):
         compute="_compute_child_count", string="Number of child equipments"
     )
     display_name = fields.Char(compute="_compute_display_name")
-    complete_name = fields.Char(
-        compute="_compute_complete_name", store=True, recursive=True
-    )
-    parent_path = fields.Char(index=True, unaccent=False)
+    complete_name = fields.Char(compute="_compute_complete_name", store=True)
+    parent_path = fields.Char(index=True)
 
     def name_get(self):
         return [(equipment.id, equipment.complete_name) for equipment in self]
@@ -58,6 +56,7 @@ class MaintenanceEquipment(models.Model):
             "name": _("Child equipment of %s") % self.name,
             "type": "ir.actions.act_window",
             "res_model": "maintenance.equipment",
+            "res_id": self.id,
             "view_mode": "list,form",
             "context": {
                 **self.env.context,
