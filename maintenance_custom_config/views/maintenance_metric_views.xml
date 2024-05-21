@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <record id="view_maintenance_metric_form" model="ir.ui.view">
+            <field name="name">maintenance.metric.form</field>
+            <field name="model">maintenance.metric</field>
+            <field name="arch" type="xml">
+                <form string="Maintenance Metric">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="unit"/>
+                            <field name="data_type"/>
+                            <field name="external_id"/>
+                            <field name="formula"/>
+                            <field name="time_interval"/>
+                            <field name="custom_interval"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_maintenance_metric_tree" model="ir.ui.view">
+            <field name="name">maintenance.metric.tree</field>
+            <field name="model">maintenance.metric</field>
+            <field name="arch" type="xml">
+                <tree string="Maintenance Metrics">
+                    <field name="name"/>
+                    <field name="unit"/>
+                    <field name="data_type"/>
+                    <field name="external_id"/>
+                    <field name="formula"/>
+                    <field name="time_interval"/>
+                    <field name="custom_interval"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem id="menu_maintenance_metric" name="Metrics" parent="maintenance.menu_maintenance_configuration" sequence="40" action="action_maintenance_metric"/>
+
+        <record id="action_maintenance_metric" model="ir.actions.act_window">
+            <field name="name">Metrics</field>
+            <field name="res_model">maintenance.metric</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_maintenance_metric_tree"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,44 @@
+<odoo>
+    <data>
+        <record id="view_maintenance_transform_form" model="ir.ui.view">
+            <field name="name">maintenance.transform.form</field>
+            <field name="model">maintenance.transform</field>
+            <field name="arch" type="xml">
+                <form string="Maintenance Transform">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="unit"/>
+                            <field name="data_type"/>
+                            <field name="external_id"/>
+                            <field name="formula"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_maintenance_transform_tree" model="ir.ui.view">
+            <field name="name">maintenance.transform.tree</field>
+            <field name="model">maintenance.transform</field>
+            <field name="arch" type="xml">
+                <tree string="Maintenance Transforms">
+                    <field name="name"/>
+                    <field name="unit"/>
+                    <field name="data_type"/>
+                    <field name="external_id"/>
+                    <field name="formula"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem id="menu_maintenance_transform" name="Transforms" parent="maintenance.menu_maintenance_configuration" sequence="30" action="action_maintenance_transform"/>
+
+        <record id="action_maintenance_transform" model="ir.actions.act_window">
+            <field name="name">Transforms</field>
+            <field name="res_model">maintenance.transform</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_maintenance_transform_tree"/>
+        </record>
+    </data>
+</odoo>

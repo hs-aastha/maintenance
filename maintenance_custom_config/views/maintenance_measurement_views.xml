@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <record id="view_maintenance_measurement_form" model="ir.ui.view">
+            <field name="name">maintenance.measurement.form</field>
+            <field name="model">maintenance.measurement</field>
+            <field name="arch" type="xml">
+                <form string="Maintenance Measurement">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="unit"/>
+                            <field name="data_type"/>
+                            <field name="external_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_maintenance_measurement_tree" model="ir.ui.view">
+            <field name="name">maintenance.measurement.tree</field>
+            <field name="model">maintenance.measurement</field>
+            <field name="arch" type="xml">
+                <tree string="Maintenance Measurements">
+                    <field name="name"/>
+                    <field name="unit"/>
+                    <field name="data_type"/>
+                    <field name="external_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem id="menu_maintenance_measurement" name="Measurements" parent="maintenance.menu_maintenance_configuration" sequence="20" action="action_maintenance_measurement"/>
+
+        <record id="action_maintenance_measurement" model="ir.actions.act_window">
+            <field name="name">Measurements</field>
+            <field name="res_model">maintenance.measurement</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_maintenance_measurement_tree"/>
+        </record>
+    </data>
+</odoo>
