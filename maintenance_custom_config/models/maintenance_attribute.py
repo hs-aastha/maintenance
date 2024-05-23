@@ -13,3 +13,4 @@ class MaintenanceAttribute(models.Model):
         ('boolean', 'Boolean')
     ], string='Data Type', required=True)
     external_id = fields.Char('External ID')
+

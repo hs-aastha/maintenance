@@ -1,6 +1,6 @@
 {
     'name': 'Maintenance Custom Config',
-    'version': '1.0',
+    'version': '17.0.0',
     'summary': 'Custom configurations for the Maintenance app',
     'category': 'Maintenance',
     'author': 'Your Name',

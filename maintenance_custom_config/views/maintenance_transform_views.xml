@@ -32,13 +32,13 @@
             </field>
         </record>
 
-        <menuitem id="menu_maintenance_transform" name="Transforms" parent="maintenance.menu_maintenance_configuration" sequence="30" action="action_maintenance_transform"/>
-
         <record id="action_maintenance_transform" model="ir.actions.act_window">
             <field name="name">Transforms</field>
             <field name="res_model">maintenance.transform</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_maintenance_transform_tree"/>
         </record>
+
+        <menuitem id="menu_maintenance_transform" name="Transforms" parent="maintenance.menu_maintenance_configuration" sequence="30" action="action_maintenance_transform"/>
     </data>
 </odoo>

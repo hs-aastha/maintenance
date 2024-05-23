@@ -30,13 +30,12 @@
             </field>
         </record>
 
-        <menuitem id="menu_maintenance_attribute" name="Attributes" parent="maintenance.menu_maintenance_configuration" sequence="10" action="action_maintenance_attribute"/>
-
         <record id="action_maintenance_attribute" model="ir.actions.act_window">
             <field name="name">Attributes</field>
             <field name="res_model">maintenance.attribute</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_maintenance_attribute_tree"/>
         </record>
+        <menuitem id="menu_maintenance_attribute" name="Attributes" parent="maintenance.menu_maintenance_configuration" sequence="10" action="action_maintenance_attribute"/>
     </data>
 </odoo>

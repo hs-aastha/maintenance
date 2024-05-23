@@ -30,13 +30,13 @@
             </field>
         </record>
 
-        <menuitem id="menu_maintenance_measurement" name="Measurements" parent="maintenance.menu_maintenance_configuration" sequence="20" action="action_maintenance_measurement"/>
-
         <record id="action_maintenance_measurement" model="ir.actions.act_window">
             <field name="name">Measurements</field>
             <field name="res_model">maintenance.measurement</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_maintenance_measurement_tree"/>
         </record>
+
+        <menuitem id="menu_maintenance_measurement" name="Measurements" parent="maintenance.menu_maintenance_configuration" sequence="20" action="action_maintenance_measurement"/>
     </data>
 </odoo>
