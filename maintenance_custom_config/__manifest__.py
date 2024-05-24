@@ -2,7 +2,7 @@
 {
     'name': 'Maintenance Custom Config',
     'version': '17.0.1.0.0',
-    'summary': "Custom configurations for the Maintenance app",
+    'summary': "Custom configurations for the Maintenance app to integrate AWS IoT Sitewise",
     'author': "Hundred Solutions",
     'maintainer': 'Hundred Solutions',
     'company': "Hundred Solutions",
@@ -15,7 +15,7 @@
         'maintenance',
     ],
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/maintenance_attribute_views.xml',
         'views/maintenance_measurement_views.xml',
         'views/maintenance_transform_views.xml',
