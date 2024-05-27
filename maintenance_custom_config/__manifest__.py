@@ -1,6 +1,6 @@
 
 {
-    'name': 'Maintenance Custom Config',
+    'name': 'Maintenance - AWS IoT Sitewise',
     'version': '17.0.1.0.0',
     'summary': "Custom configurations for the Maintenance app to integrate AWS IoT Sitewise",
     'author': "Hundred Solutions",
