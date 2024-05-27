@@ -8,9 +8,6 @@
     'company': "Hundred Solutions",
     'website': 'https://www.hundredsolutions.com/',
     'category': 'Maintenance',
-    'description': """
-    Helps You To work odoo and tripletex.
-    """,
     'depends': [
         'maintenance',
     ],
