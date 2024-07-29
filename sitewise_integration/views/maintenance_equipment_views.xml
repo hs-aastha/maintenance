@@ -1,5 +1,3 @@
-<!-- /path/to/your/addons/sitewise_integration/views/maintenance_equipment_views.xml -->
-
 <odoo>
     <data>
         <!-- Modify Maintenance Equipment Form View -->
@@ -11,50 +9,30 @@
                 <!-- Add new tabs in the notebook -->
                 <xpath expr="//notebook" position="inside">
                     <page string="Attributes">
-                        <field name="attribute_ids">
+                        <field name="attribute_line_ids">
                             <tree editable="bottom">
-                                <field name="name"/>
-                                <field name="default_value"/>
-                                <field name="data_type"/>
-                                <field name="external_id"/>
-                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
+                                <field name="attribute_id" widget="many2one"/>
                             </tree>
                         </field>
                     </page>
                     <page string="Measurements">
-                        <field name="measurement_ids">
+                        <field name="measurement_line_ids">
                             <tree editable="bottom">
-                                <field name="name"/>
-                                <field name="unit"/>
-                                <field name="data_type"/>
-                                <field name="external_id"/>
-                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
+                                <field name="measurement_id" widget="many2one"/>
                             </tree>
                         </field>
                     </page>
                     <page string="Transforms">
-                        <field name="transform_ids">
+                        <field name="transform_line_ids">
                             <tree editable="bottom">
-                                <field name="name"/>
-                                <field name="unit"/>
-                                <field name="data_type"/>
-                                <field name="external_id"/>
-                                <field name="formula"/>
-                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
+                                <field name="transform_id" widget="many2one"/>
                             </tree>
                         </field>
                     </page>
                     <page string="Metrics">
-                        <field name="metric_ids">
+                        <field name="metric_line_ids">
                             <tree editable="bottom">
-                                <field name="name"/>
-                                <field name="unit"/>
-                                <field name="data_type"/>
-                                <field name="external_id"/>
-                                <field name="formula"/>
-                                <field name="time_interval"/>
-                                <field name="custom_interval"/>
-                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
+                                <field name="metric_id" widget="many2one"/>
                             </tree>
                         </field>
                     </page>
