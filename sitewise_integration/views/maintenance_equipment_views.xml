@@ -17,6 +17,7 @@
                                 <field name="default_value"/>
                                 <field name="data_type"/>
                                 <field name="external_id"/>
+                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
                             </tree>
                         </field>
                     </page>
@@ -27,6 +28,7 @@
                                 <field name="unit"/>
                                 <field name="data_type"/>
                                 <field name="external_id"/>
+                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
                             </tree>
                         </field>
                     </page>
@@ -38,6 +40,7 @@
                                 <field name="data_type"/>
                                 <field name="external_id"/>
                                 <field name="formula"/>
+                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
                             </tree>
                         </field>
                     </page>
@@ -51,6 +54,7 @@
                                 <field name="formula"/>
                                 <field name="time_interval"/>
                                 <field name="custom_interval"/>
+                                <field name="equipment_id" widget="many2one" options="{'no_open': True}"/>
                             </tree>
                         </field>
                     </page>
