@@ -1,3 +1,5 @@
+<!-- /path/to/your/addons/sitewise_integration/views/maintenance_equipment_views.xml -->
+
 <odoo>
     <data>
         <!-- Modify Maintenance Equipment Form View -->
@@ -6,11 +8,12 @@
             <field name="model">maintenance.equipment</field>
             <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
             <field name="arch" type="xml">
-                <!-- Ensure header exists in the parent view -->
-                <xpath expr="//form/sheet/header" position="inside">
+                <!-- Add buttons in the header section -->
+                <xpath expr="//header" position="inside">
                     <button name="action_create_sitewise_model" type="object" string="Create Model" class="oe_highlight"/>
                     <button name="action_create_sitewise_asset" type="object" string="Create Asset" class="oe_highlight"/>
                 </xpath>
+                <!-- Add new tabs in the notebook -->
                 <xpath expr="//sheet/notebook" position="inside">
                     <page string="Attributes">
                         <field name="attribute_ids">
