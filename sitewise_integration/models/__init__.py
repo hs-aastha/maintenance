@@ -1,3 +1,4 @@
+from . import maintenance_equipment
 from . import maintenance_attribute
 from . import maintenance_measurement
 from . import maintenance_transform

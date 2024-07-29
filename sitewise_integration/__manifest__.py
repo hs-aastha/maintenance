@@ -17,6 +17,7 @@
         'views/maintenance_measurement_views.xml',
         'views/maintenance_transform_views.xml',
         'views/maintenance_metric_views.xml',
+        'views/maintenance_equipment_views.xml',
     ],
     # 'images': ['static/description/banner.png'],
     'license': 'AGPL-3',

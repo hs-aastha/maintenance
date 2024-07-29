@@ -1,8 +1,8 @@
 from odoo import models, fields
 
-class MaintenanceMeasurement(models.Model):
-    _name = 'maintenance.measurement'
-    _description = 'Maintenance Measurement'
+class MaintenanceTransform(models.Model):
+    _name = 'maintenance.transform'
+    _description = 'Maintenance Transform'
 
     name = fields.Char('Name', required=True)
     unit = fields.Char('Unit')
@@ -13,3 +13,5 @@ class MaintenanceMeasurement(models.Model):
         ('boolean', 'Boolean')
     ], string='Data Type', required=True)
     external_id = fields.Char('External ID')
+    formula = fields.Text('Formula')
+    equipment_id = fields.Many2one('maintenance.equipment', string='Equipment')

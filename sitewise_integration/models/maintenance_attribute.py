@@ -1,11 +1,11 @@
 from odoo import models, fields
 
-class MaintenanceTransform(models.Model):
-    _name = 'maintenance.transform'
-    _description = 'Maintenance Transform'
+class MaintenanceAttribute(models.Model):
+    _name = 'maintenance.attribute'
+    _description = 'Maintenance Attribute'
 
     name = fields.Char('Name', required=True)
-    unit = fields.Char('Unit')
+    default_value = fields.Char('Default Value')
     data_type = fields.Selection([
         ('string', 'String'),
         ('integer', 'Integer'),
@@ -13,4 +13,4 @@ class MaintenanceTransform(models.Model):
         ('boolean', 'Boolean')
     ], string='Data Type', required=True)
     external_id = fields.Char('External ID')
-    formula = fields.Text('Formula')
+    equipment_id = fields.Many2one('maintenance.equipment', string='Equipment')
