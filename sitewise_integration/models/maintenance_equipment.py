@@ -67,18 +67,16 @@ class MaintenanceEquipment(models.Model):
         response = client.create_asset(**asset_payload)
         return response
 
-    @api.multi
     def button_create_model(self):
-        self.ensure_one()
-        response = self.create_sitewise_model()
-        if response and 'assetModelId' in response:
-            self.sitewise_model_id = response['assetModelId']
-        # You can add further logic to handle the response if needed
+        for record in self:
+            response = record.create_sitewise_model()
+            if response and 'assetModelId' in response:
+                record.sitewise_model_id = response['assetModelId']
+            # You can add further logic to handle the response if needed
 
-    @api.multi
     def button_create_asset(self):
-        self.ensure_one()
-        response = self.create_sitewise_asset()
-        if response and 'assetId' in response:
-            self.sitewise_asset_id = response['assetId']
-        # You can add further logic to handle the response if needed
+        for record in self:
+            response = record.create_sitewise_asset()
+            if response and 'assetId' in response:
+                record.sitewise_asset_id = response['assetId']
+            # You can add further logic to handle the response if needed
