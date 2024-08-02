@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
                 <!-- Corrected XPath to add buttons to the header -->
                 <xpath expr="//form/sheet/div[@class='oe_button_box']" position="inside">
-                    <button name="action_create_model" type="object" string="Create Model" class="oe_highlight"/>
-                    <button name="action_create_asset" type="object" string="Create Asset" class="oe_highlight"/>
+                    <button name="button_create_model" type="object" string="Create Model" class="btn-primary"/>
+                    <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary"/>
                 </xpath>
                 <!-- Add new tabs in the notebook -->
                 <xpath expr="//notebook" position="inside">
