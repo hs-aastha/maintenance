@@ -58,6 +58,11 @@
                         </field>
                     </page>
                 </xpath>
+                <!-- Add fields to display the AWS IDs -->
+                <xpath expr="//sheet/group/group" position="inside">
+                    <field name="sitewise_model_id"/>
+                    <field name="sitewise_asset_id"/>
+                </xpath>
             </field>
         </record>
     </data>
