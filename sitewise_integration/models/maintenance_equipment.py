@@ -8,20 +8,20 @@ class MaintenanceEquipment(models.Model):
     measurement_ids = fields.One2many('maintenance.measurement', 'equipment_id', string='Measurements')
     transform_ids = fields.One2many('maintenance.transform', 'equipment_id', string='Transforms')
     metric_ids = fields.One2many('maintenance.metric', 'equipment_id', string='Metrics')
-    
-    aws_access_key_id = ''
-    aws_secret_access_key = ''
-    aws_region = ''
-    
+
     sitewise_model_id = fields.Char(string='SiteWise Model ID')
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID')
 
     def get_aws_client(self, service_name):
+        aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
+        aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_secret_access_key')
+        aws_region = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_region')
+
         return boto3.client(
             service_name,
-            region_name=self.aws_region,
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key
+            region_name=aws_region,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key
         )
 
     def create_sitewise_model(self):

@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        <record id="sitewise_integration_settings" model="ir.ui.view">
+            <field name="name">sitewise.integration.settings</field>
+            <field name="model">res.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Sitewise Integration Settings">
+                    <group>
+                        <field name="aws_access_key_id"/>
+                        <field name="aws_secret_access_key"/>
+                        <field name="aws_region"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="sitewise_integration_settings_action" model="ir.actions.act_window">
+            <field name="name">Sitewise Integration Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sitewise_integration_settings"/>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_sitewise_integration_settings" name="Sitewise Integration"
+                  parent="base.menu_config" action="sitewise_integration_settings_action"/>
+    </data>
+</odoo>
