@@ -10,6 +10,9 @@
     'depends': [
         'maintenance',
     ],
+    'external_dependencies': {
+        'python': ['boto3'],
+    },
     'data': [
         'security/ir.model.access.csv',
         'views/maintenance_attribute_views.xml',
