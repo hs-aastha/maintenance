@@ -1,28 +1,28 @@
 <odoo>
-    <data>
-        <record id="sitewise_integration_settings" model="ir.ui.view">
-            <field name="name">sitewise.integration.settings</field>
-            <field name="model">res.config.settings</field>
-            <field name="arch" type="xml">
-                <form string="Sitewise Integration Settings">
-                    <group>
-                        <field name="aws_access_key_id"/>
-                        <field name="aws_secret_access_key"/>
-                        <field name="aws_region"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="sitewise_integration_settings_action" model="ir.actions.act_window">
-            <field name="name">Sitewise Integration Settings</field>
-            <field name="res_model">res.config.settings</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="sitewise_integration_settings"/>
-            <field name="target">inline</field>
-        </record>
-
-        <menuitem id="menu_sitewise_integration_settings" name="Sitewise Integration"
-                  parent="base.menu_config" action="sitewise_integration_settings_action"/>
-    </data>
+    <record id="view_res_config_settings_form_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sync_outlook_calendar_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="aws_integration_details">
+                    <div class="o_setting_right_pane">
+                        <h3 style="text-align:left;">AWS Credentials</h3>
+                        <a href="https://www.odoo.com/documentation/16.0/applications/general/calendars/outlook/outlook_calendar.html"
+                           title="Documentation" class="o_doc_link" target="_blank"/>
+                        <div class="text-muted">
+                            <label for="aws_access_key_id"/>
+                            <field name="aws_access_key_id"/>
+                            <br/>
+                            <label for="aws_secret_access_key"/>
+                            <field name="aws_secret_access_key"/>
+                            <br/>
+                            <label for="aws_region"/>
+                            <field name="aws_region"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>
