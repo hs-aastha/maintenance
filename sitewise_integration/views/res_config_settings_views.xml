@@ -10,11 +10,11 @@
                     <div class="o_setting_right_pane">
                         <h3 style="text-align:left;">AWS Credentials</h3>
                         <div class="text-muted">
-                            <label for="aws_access_api_key"/>
-                            <field name="aws_access_api_key"/>
+                            <label for="aws_access_key_id"/>
+                            <field name="aws_access_key_id"/>
                             <br/>
-                            <label for="aws_secret_api_key"/>
-                            <field name="aws_secret_api_key"/>
+                            <label for="aws_secret_access_key"/>
+                            <field name="aws_secret_access_key"/>
                             <br/>
                             <label for="aws_region"/>
                             <field name="aws_region"/>
