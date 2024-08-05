@@ -60,16 +60,6 @@ class MaintenanceEquipment(models.Model):
         asset_payload = {
             "assetName": "OdooAsset",
             "assetModelId": self.sitewise_model_id,  # Use the actual asset model ID
-            "assetProperties": [
-                {
-                    "propertyName": "Property1",
-                    "value": {
-                        "value": {
-                            "stringValue": "Value"
-                        }
-                    }
-                }
-            ]
         }
 
         response = client.create_asset(**asset_payload)
