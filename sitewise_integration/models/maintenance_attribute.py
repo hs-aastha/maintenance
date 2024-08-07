@@ -14,4 +14,4 @@ class MaintenanceAttribute(models.Model):
     ], string='Data Type', required=True)
     external_id = fields.Char('External ID')
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment')
-    equipment_category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category')
+    #equipment_category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category')

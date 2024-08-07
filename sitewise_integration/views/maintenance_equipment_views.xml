@@ -6,8 +6,9 @@
             <field name="model">maintenance.equipment</field>
             <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
             <field name="arch" type="xml">
-                <!-- Remove "Create Model" button and leave "Create Asset" button -->
+                <!-- Corrected XPath to add buttons to the header -->
                 <xpath expr="//form/sheet/div[@class='oe_button_box']" position="inside">
+                    <button name="button_create_model" type="object" string="Create Model" class="btn-primary"/>
                     <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary"/>
                 </xpath>
                 <!-- Add new tabs in the notebook -->

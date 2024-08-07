@@ -1,6 +1,5 @@
 import boto3
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import models, fields, api
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -13,7 +12,7 @@ class MaintenanceEquipment(models.Model):
     transform_ids = fields.One2many('maintenance.transform', 'equipment_id', string='Transforms')
     metric_ids = fields.One2many('maintenance.metric', 'equipment_id', string='Metrics')
 
-    sitewise_model_id = fields.Char(string='SiteWise Model ID', related='equipment_category_id.sitewise_model_id', store=True, readonly=False)
+    sitewise_model_id = fields.Char(string='SiteWise Model ID')
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID')
 
     def get_aws_client(self, service_name):
@@ -33,10 +32,29 @@ class MaintenanceEquipment(models.Model):
             aws_secret_access_key=aws_secret_access_key
         )
 
-    def create_sitewise_asset(self):
-        if not self.sitewise_model_id:
-            raise UserError(_("Asset can't be created. There is no existing Sitewise Model for '%s'.") % (self.equipment_category_id.name or ''))
+    def create_sitewise_model(self):
+        client = self.get_aws_client('iotsitewise')
 
+        asset_model_payload = {
+            "assetModelName": "OdooModel",
+            "assetModelDescription": "Model created from Odoo",
+            "assetModelProperties": [
+                {
+                    "name": "Property1",
+                    "dataType": "STRING",
+                    "type": {
+                        "attribute": {
+                            "defaultValue": "DefaultValue"
+                        }
+                    }
+                }
+            ]
+        }
+
+        response = client.create_asset_model(**asset_model_payload)
+        return response
+
+    def create_sitewise_asset(self):
         client = self.get_aws_client('iotsitewise')
 
         asset_payload = {
@@ -46,6 +64,13 @@ class MaintenanceEquipment(models.Model):
 
         response = client.create_asset(**asset_payload)
         return response
+
+    def button_create_model(self):
+        for record in self:
+            response = record.create_sitewise_model()
+            if response and 'assetModelId' in response:
+                record.sitewise_model_id = response['assetModelId']
+            # You can add further logic to handle the response if needed
 
     def button_create_asset(self):
         for record in self:
