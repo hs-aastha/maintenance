@@ -1,14 +1,19 @@
 <odoo>
     <data>
-        <!-- Modify Maintenance Equipment Form View -->
-        <record id="view_maintenance_equipment_form" model="ir.ui.view">
-            <field name="name">maintenance.equipment.form</field>
-            <field name="model">maintenance.equipment</field>
-            <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <!-- Modify Maintenance Equipment Category Form View -->
+        <record id="view_maintenance_equipment_category_form" model="ir.ui.view">
+            <field name="name">maintenance.equipment.category.form</field>
+            <field name="model">maintenance.equipment.category</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_category_view_form"/>
             <field name="arch" type="xml">
-                <!-- Remove "Create Model" button and leave "Create Asset" button -->
-                <xpath expr="//form/sheet/div[@class='oe_button_box']" position="inside">
-                    <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary"/>
+                <!-- Add fields for model creation and the "Create Model" button -->
+                <xpath expr="//sheet/group" position="inside">
+                    <group string="AWS IoT Sitewise Model">
+                        <field name="model_name"/>
+                        <field name="model_description"/>
+                        <button name="button_create_model" type="object" string="Create Model" class="btn-primary"/>
+                        <field name="sitewise_model_id"/>
+                    </group>
                 </xpath>
                 <!-- Add new tabs in the notebook -->
                 <xpath expr="//notebook" position="inside">
@@ -56,11 +61,6 @@
                             </tree>
                         </field>
                     </page>
-                </xpath>
-                <!-- Add fields to display the AWS IDs -->
-                <xpath expr="//sheet/group/group" position="inside">
-                    <field name="sitewise_model_id"/>
-                    <field name="sitewise_asset_id"/>
                 </xpath>
             </field>
         </record>

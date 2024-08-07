@@ -24,3 +24,4 @@ class MaintenanceMetric(models.Model):
     ], string='Time Interval', required=True)
     custom_interval = fields.Char('Custom Interval')
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment')
+    equipment_category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category')

@@ -15,3 +15,4 @@ class MaintenanceTransform(models.Model):
     external_id = fields.Char('External ID')
     formula = fields.Text('Formula')
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment')
+    equipment_category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category')
