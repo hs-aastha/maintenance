@@ -20,6 +20,7 @@
         'views/maintenance_transform_views.xml',
         'views/maintenance_metric_views.xml',
         'views/maintenance_equipment_views.xml',
+        'views/maintenance_equipment_category_views.xml',
         'views/res_config_settings_views.xml',
     ],
     # 'images': ['static/description/banner.png'],
