@@ -24,7 +24,7 @@
             <!--            </xpath>-->
             <xpath expr="//block[@name='integration']" position="inside">
                 <setting string="AWS Integration" help="Configure AWS credentials for integration" id="aws_integration">
-                    <div class="o_setting_right_pane">
+<!--                    <div class="o_setting_right_pane">-->
                         <div class="o_group">
                             <div class="row mt16">
                                 <div class="col-4">
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+<!--                    </div>-->
                 </setting>
             </xpath>
         </field>
