@@ -4,6 +4,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
@@ -17,7 +18,8 @@ class MaintenanceEquipment(models.Model):
 
     def get_aws_client(self, service_name):
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
-        aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_secret_access_key')
+        aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param(
+            'sitewise_integration.aws_secret_access_key')
         aws_region = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_region')
 
         # Add logging to check parameter values

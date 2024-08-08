@@ -1,5 +1,6 @@
 from odoo import models, fields
 
+
 class MaintenanceMetric(models.Model):
     _name = 'maintenance.metric'
     _description = 'Maintenance Metric'

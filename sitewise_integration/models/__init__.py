@@ -4,4 +4,5 @@ from . import maintenance_measurement
 from . import maintenance_transform
 from . import maintenance_metric
 from . import res_config_settings
-#from . import maintenance_equipment_category
+from . import maintenance_equipment_category_inherit
+i

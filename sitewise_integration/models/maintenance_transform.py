@@ -1,5 +1,6 @@
 from odoo import models, fields
 
+
 class MaintenanceTransform(models.Model):
     _name = 'maintenance.transform'
     _description = 'Maintenance Transform'
