@@ -5,9 +5,9 @@
         <field name="model">maintenance.equipment.category</field>
         <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='note']" position="before">
-                <field name="sitewise_model_id"/>
-            </xpath>
+<!--            <xpath expr="//field[@name='note']" position="before">-->
+<!--                <field name="sitewise_model_id"/>-->
+<!--            </xpath>-->
         </field>
     </record>
 </odoo>
