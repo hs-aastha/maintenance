@@ -5,30 +5,12 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <!--            <xpath expr="//div[@id='companies']" position="after">-->
-            <!--                <div class="col-12 col-lg-6 o_setting_box" id="aws_integration_details">-->
-            <!--                    <div class="o_setting_right_pane">-->
-            <!--                        <h3 style="text-align:left;">AWS Credentials</h3>-->
-            <!--                        <div class="text-muted">-->
-            <!--                            <label for="aws_access_key_id"/>-->
-            <!--                            <field name="aws_access_key_id"/>-->
-            <!--                            <br/>-->
-            <!--                            <label for="aws_secret_access_key"/>-->
-            <!--                            <field name="aws_secret_access_key"/>-->
-            <!--                            <br/>-->
-            <!--                            <label for="aws_region"/>-->
-            <!--                            <field name="aws_region"/>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </xpath>-->
             <xpath expr="//block[@name='integration']" position="inside">
                 <setting string="AWS Integration" help="Configure AWS credentials for integration" id="aws_integration">
-<!--                    <div class="o_setting_right_pane">-->
                         <div class="o_group">
                             <div class="row mt16">
                                 <div class="col-4">
-                                    <label for="aws_access_key_id" class="o_light_label">AWS Access Key ID</label>
+                                    <label for="aws_access_key_id" class="o_light_label">AWS Access Key</label>
                                 </div>
                                 <div class="col-8">
                                     <field name="aws_access_key_id" class="o_field_char"
@@ -37,7 +19,7 @@
                             </div>
                             <div class="row mt16">
                                 <div class="col-4">
-                                    <label for="aws_secret_access_key" class="o_light_label">AWS Secret Access Key
+                                    <label for="aws_secret_access_key" class="o_light_label">AWS Secret Key
                                     </label>
                                 </div>
                                 <div class="col-8">
@@ -54,7 +36,6 @@
                                 </div>
                             </div>
                         </div>
-<!--                    </div>-->
                 </setting>
             </xpath>
         </field>
