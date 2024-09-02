@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
             <field name="arch" type="xml">
                 <!-- Corrected XPath to add buttons to the header -->
-                <xpath expr="//form" position="inside">
+                <xpath expr="//form/sheet" position="inside">
                     <header>
                         <button name="button_create_model" type="object" string="Create Model" class="btn-primary"/>
                         <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary"/>
