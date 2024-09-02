@@ -11,7 +11,7 @@
             <xpath expr="//sheet" position="inside">
                 <notebook>
                     <page string="Attributes">
-                        <field name="attribute_ids">
+                        <field name="maintenance_attribute_line_ids">
                             <tree editable="bottom">
                                 <field name="name"/>
                                 <field name="default_value"/>
@@ -21,7 +21,7 @@
                         </field>
                     </page>
                     <page string="Measurements">
-                        <field name="measurement_ids">
+                        <field name="maintenance_measurement_line_ids">
                             <tree editable="bottom">
                                 <field name="name"/>
                                 <field name="unit"/>
@@ -31,7 +31,7 @@
                         </field>
                     </page>
                     <page string="Transforms">
-                        <field name="transform_ids">
+                        <field name="maintenance_transform_line_ids">
                             <tree editable="bottom">
                                 <field name="name"/>
                                 <field name="unit"/>
@@ -42,7 +42,7 @@
                         </field>
                     </page>
                     <page string="Metrics">
-                        <field name="metric_ids">
+                        <field name="maintenance_metric_line_ids">
                             <tree editable="bottom">
                                 <field name="name"/>
                                 <field name="unit"/>

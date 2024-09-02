@@ -8,10 +8,10 @@ _logger = logging.getLogger(__name__)
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
-    attribute_ids = fields.One2many('maintenance.attribute', 'equipment_id', string='Attributes')
-    measurement_ids = fields.One2many('maintenance.measurement', 'equipment_id', string='Measurements')
-    transform_ids = fields.One2many('maintenance.transform', 'equipment_id', string='Transforms')
-    metric_ids = fields.One2many('maintenance.metric', 'equipment_id', string='Metrics')
+    attribute_ids = fields.One2many('maintenance.attribute.line', 'equipment_id', string='Attributes')
+    measurement_ids = fields.One2many('maintenance.measurement.line', 'equipment_id', string='Measurements')
+    transform_ids = fields.One2many('maintenance.transform.line', 'equipment_id', string='Transforms')
+    metric_ids = fields.One2many('maintenance.metric.line', 'equipment_id', string='Metrics')
 
     sitewise_model_id = fields.Char(string='SiteWise Model ID')
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID')
