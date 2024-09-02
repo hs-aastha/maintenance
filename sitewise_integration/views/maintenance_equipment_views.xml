@@ -7,9 +7,11 @@
             <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
             <field name="arch" type="xml">
                 <!-- Corrected XPath to add buttons to the header -->
-                <xpath expr="//form/header" position="inside">
-                    <button name="button_create_model" type="object" string="Create Model" class="btn-primary"/>
-                    <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary"/>
+                <xpath expr="//form" position="inside">
+                    <header>
+                        <button name="button_create_model" type="object" string="Create Model" class="btn-primary"/>
+                        <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary"/>
+                    </header>
                 </xpath>
                 <!-- Add new tabs in the notebook -->
                 <xpath expr="//notebook" position="inside">
