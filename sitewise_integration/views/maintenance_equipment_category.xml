@@ -9,50 +9,52 @@
                 <field name="sitewise_model_id"/>
             </xpath>
             <xpath expr="//sheet" position="inside">
-                <page string="Attributes">
-                    <field name="attribute_ids">
-                        <tree editable="bottom">
-                            <field name="name"/>
-                            <field name="default_value"/>
-                            <field name="data_type"/>
-                            <field name="external_id"/>
-                        </tree>
-                    </field>
-                </page>
-                <page string="Measurements">
-                    <field name="measurement_ids">
-                        <tree editable="bottom">
-                            <field name="name"/>
-                            <field name="unit"/>
-                            <field name="data_type"/>
-                            <field name="external_id"/>
-                        </tree>
-                    </field>
-                </page>
-                <page string="Transforms">
-                    <field name="transform_ids">
-                        <tree editable="bottom">
-                            <field name="name"/>
-                            <field name="unit"/>
-                            <field name="data_type"/>
-                            <field name="external_id"/>
-                            <field name="formula"/>
-                        </tree>
-                    </field>
-                </page>
-                <page string="Metrics">
-                    <field name="metric_ids">
-                        <tree editable="bottom">
-                            <field name="name"/>
-                            <field name="unit"/>
-                            <field name="data_type"/>
-                            <field name="external_id"/>
-                            <field name="formula"/>
-                            <field name="time_interval"/>
-                            <field name="custom_interval"/>
-                        </tree>
-                    </field>
-                </page>
+                <notebook>
+                    <page string="Attributes">
+                        <field name="attribute_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="default_value"/>
+                                <field name="data_type"/>
+                                <field name="external_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Measurements">
+                        <field name="measurement_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="unit"/>
+                                <field name="data_type"/>
+                                <field name="external_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Transforms">
+                        <field name="transform_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="unit"/>
+                                <field name="data_type"/>
+                                <field name="external_id"/>
+                                <field name="formula"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Metrics">
+                        <field name="metric_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="unit"/>
+                                <field name="data_type"/>
+                                <field name="external_id"/>
+                                <field name="formula"/>
+                                <field name="time_interval"/>
+                                <field name="custom_interval"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
             </xpath>
         </field>
     </record>
