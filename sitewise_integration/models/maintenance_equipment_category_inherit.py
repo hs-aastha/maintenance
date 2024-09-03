@@ -1,5 +1,4 @@
-from zeep.exceptions import ValidationError
-
+from odoo.exceptions import ValidationError
 from odoo import models, fields, api
 import logging
 _logger = logging.getLogger(__name__)
