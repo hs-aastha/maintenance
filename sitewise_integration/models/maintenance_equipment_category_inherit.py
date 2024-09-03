@@ -41,7 +41,7 @@ class MaintenanceEquipmentCategory(models.Model):
                 "name": attr_line.name.name,
                 "dataType": attr_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for attribute
-                "externalId": attr_line.external_id or "",
+                "externalId": attr_line.external_id,
                 "type": {
                     "attribute": {
                         "defaultValue": attr_line.default_value or ""
@@ -54,7 +54,7 @@ class MaintenanceEquipmentCategory(models.Model):
                 "name": measurement_line.name.name,
                 "dataType": measurement_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for measurement
-                "externalId": measurement_line.external_id or "",
+                "externalId": measurement_line.external_id,
                 "unit": measurement_line.unit or "",
                 "type": {
                     "measurement": {
@@ -73,7 +73,7 @@ class MaintenanceEquipmentCategory(models.Model):
                 "name": transform_line.name.name,
                 "dataType": transform_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for transform
-                "externalId": transform_line.external_id or "",
+                "externalId": transform_line.external_id,
                 "unit": transform_line.unit or "",
                 "type": {
                     "transform": {
@@ -93,7 +93,7 @@ class MaintenanceEquipmentCategory(models.Model):
                 "name": metric_line.name.name,
                 "dataType": metric_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for metric
-                "externalId": metric_line.external_id or "",
+                "externalId": metric_line.external_id,
                 "unit": metric_line.unit or "",
                 "type": {
                     "metric": {
