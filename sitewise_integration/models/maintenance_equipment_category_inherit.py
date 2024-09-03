@@ -42,7 +42,6 @@ class MaintenanceEquipmentCategory(models.Model):
             property_dict = {
                 "name": attr_line.name.name,
                 "dataType": attr_line.data_type.upper(),
-                "dataTypeSpec": "STRING",  # Assuming string data type spec for attribute
                 "type": {
                     "attribute": {
                         "defaultValue": attr_line.default_value or ""
@@ -58,7 +57,6 @@ class MaintenanceEquipmentCategory(models.Model):
             property_dict = {
                 "name": measurement_line.name.name,
                 "dataType": measurement_line.data_type.upper(),
-                "dataTypeSpec": "STRING",  # Assuming string data type spec for measurement
                 "unit": measurement_line.unit or "",
                 "type": {
                     "measurement": {
@@ -79,7 +77,6 @@ class MaintenanceEquipmentCategory(models.Model):
             property_dict = {
                 "name": transform_line.name.name,
                 "dataType": transform_line.data_type.upper(),
-                "dataTypeSpec": "STRING",  # Assuming string data type spec for transform
                 "unit": transform_line.unit or "",
                 "type": {
                     "transform": {
@@ -102,7 +99,6 @@ class MaintenanceEquipmentCategory(models.Model):
             property_dict = {
                 "name": metric_line.name.name,
                 "dataType": metric_line.data_type.upper(),
-                "dataTypeSpec": "STRING",  # Assuming string data type spec for metric
                 "unit": metric_line.unit or "",
                 "type": {
                     "metric": {
