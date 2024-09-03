@@ -27,7 +27,7 @@
                     </page>
                     <page string="Measurements">
                         <field name="measurement_ids">
-                            <tree>
+                            <tree create="false">
                                 <field name="name"/>
                                 <field name="unit"/>
                                 <field name="data_type"/>
@@ -37,7 +37,7 @@
                     </page>
                     <page string="Transforms">
                         <field name="transform_ids">
-                            <tree>
+                            <tree create="false">
                                 <field name="name"/>
                                 <field name="unit"/>
                                 <field name="data_type"/>
@@ -48,7 +48,7 @@
                     </page>
                     <page string="Metrics">
                         <field name="metric_ids">
-                            <tree>
+                            <tree create="false">
                                 <field name="name"/>
                                 <field name="unit"/>
                                 <field name="data_type"/>
