@@ -122,7 +122,7 @@ class MaintenanceEquipmentCategory(models.Model):
         # Create the full payload for creating the SiteWise model
         asset_model_payload = {
             "assetModelName": self.name,
-            "assetModelDescription": "Model created from Odoo",
+            "assetModelDescription": self.note,
             "assetModelProperties": asset_model_properties
         }
         try:
