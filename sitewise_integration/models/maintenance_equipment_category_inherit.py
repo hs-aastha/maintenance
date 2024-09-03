@@ -1,3 +1,5 @@
+from zeep.exceptions import ValidationError
+
 from odoo import models, fields, api
 import logging
 _logger = logging.getLogger(__name__)
@@ -37,24 +39,26 @@ class MaintenanceEquipmentCategory(models.Model):
         asset_model_properties = []
         # Process maintenance_attribute_line_ids
         for attr_line in self.maintenance_attribute_line_ids:
-            asset_model_properties.append({
+            property_dict = {
                 "name": attr_line.name.name,
                 "dataType": attr_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for attribute
-                "externalId": attr_line.external_id,
                 "type": {
                     "attribute": {
                         "defaultValue": attr_line.default_value or ""
                     }
                 }
-            })
+            }
+            # Add externalId field if it exists
+            if attr_line.external_id:
+                property_dict["externalId"] = attr_line.external_id
+            asset_model_properties.append(property_dict)
         # Process maintenance_measurement_line_ids
         for measurement_line in self.maintenance_measurement_line_ids:
-            asset_model_properties.append({
+            property_dict = {
                 "name": measurement_line.name.name,
                 "dataType": measurement_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for measurement
-                "externalId": measurement_line.external_id,
                 "unit": measurement_line.unit or "",
                 "type": {
                     "measurement": {
@@ -65,15 +69,17 @@ class MaintenanceEquipmentCategory(models.Model):
                         }
                     }
                 }
-            })
-
+            }
+            # Add externalId field if it exists
+            if measurement_line.external_id:
+                property_dict["externalId"] = measurement_line.external_id
+            asset_model_properties.append(property_dict)
         # Process maintenance_transform_line_ids
         for transform_line in self.maintenance_transform_line_ids:
-            asset_model_properties.append({
+            property_dict = {
                 "name": transform_line.name.name,
                 "dataType": transform_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for transform
-                "externalId": transform_line.external_id,
                 "unit": transform_line.unit or "",
                 "type": {
                     "transform": {
@@ -86,14 +92,17 @@ class MaintenanceEquipmentCategory(models.Model):
                         }
                     }
                 }
-            })
+            }
+            # Add externalId field if it exists
+            if transform_line.external_id:
+                property_dict["externalId"] = transform_line.external_id
+            asset_model_properties.append(property_dict)
         # Process maintenance_metric_line_ids
         for metric_line in self.maintenance_metric_line_ids:
-            asset_model_properties.append({
+            property_dict = {
                 "name": metric_line.name.name,
                 "dataType": metric_line.data_type.upper(),
                 "dataTypeSpec": "STRING",  # Assuming string data type spec for metric
-                "externalId": metric_line.external_id,
                 "unit": metric_line.unit or "",
                 "type": {
                     "metric": {
@@ -110,16 +119,24 @@ class MaintenanceEquipmentCategory(models.Model):
                         }
                     }
                 }
-            })
+            }
+            # Add externalId field if it exists
+            if metric_line.external_id:
+                property_dict["externalId"] = metric_line.external_id
+            asset_model_properties.append(property_dict)
         # Create the full payload for creating the SiteWise model
         asset_model_payload = {
             "assetModelName": self.name,
             "assetModelDescription": "Model created from Odoo",
             "assetModelProperties": asset_model_properties
         }
-        # Send the payload to AWS SiteWise to create the asset model
-        response = client.create_asset_model(**asset_model_payload)
-        return response
+        try:
+            # Send the payload to AWS SiteWise to create the asset model
+            response = client.create_asset_model(**asset_model_payload)
+            return response
+        except client.exceptions.ResourceAlreadyExistsException:
+            raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
+            return None
 
 
     def button_create_model(self):
