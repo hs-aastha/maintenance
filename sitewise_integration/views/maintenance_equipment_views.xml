@@ -17,7 +17,7 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Attributes">
                         <field name="attribute_ids">
-                            <tree>
+                            <tree create="false">
                                 <field name="name"/>
                                 <field name="default_value"/>
                                 <field name="data_type"/>
