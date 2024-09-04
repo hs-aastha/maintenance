@@ -92,8 +92,9 @@ class MaintenanceEquipment(models.Model):
         client = self.get_aws_client('iotsitewise')
 
         asset_payload = {
-            "assetName": "OdooAsset",
+            "assetName": self.name,
             "assetModelId": self.sitewise_model_id,  # Use the actual asset model ID
+            "assetDescription": self.note,
         }
 
         response = client.create_asset(**asset_payload)
