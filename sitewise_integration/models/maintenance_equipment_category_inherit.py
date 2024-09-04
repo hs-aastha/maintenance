@@ -99,7 +99,6 @@ class MaintenanceEquipmentCategory(models.Model):
                             "value": {
                                 "propertyPath": [
                                     {
-                                        "id": str(uuid.uuid4()),  # Generate a valid UUID
                                         "name": "dummy_path_name_1"  # Updated to lowercase
                                     }
                                 ]
