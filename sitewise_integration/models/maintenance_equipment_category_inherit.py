@@ -96,13 +96,6 @@ class MaintenanceEquipmentCategory(models.Model):
                         "variables": [
                         {
                             "name": "variable_name_1",  # Updated variable name to comply with pattern
-                            "value": {
-                                "propertyPath": [
-                                    {
-                                        "name": "dummy_path_name_1"  # Updated to lowercase
-                                    }
-                                ]
-                            }
                         }
                     ]
                     }
