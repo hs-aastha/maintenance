@@ -15,6 +15,50 @@
             </xpath>
             <xpath expr="//sheet" position="inside">
                 <notebook>
+                    <page string="Description">
+                        <field name="name"/>
+                    </page>
+                    <page string="Product Information" name="product_information">
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="partner_ref"/>
+                                <field name="model"/>
+                                <field name="serial_no"/>
+                            </group>
+                            <group>
+                                <field name="effective_date"/>
+                                <field name="cost" groups="maintenance.group_equipment_manager"/>
+                                <field name="warranty_date"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Maintenance" name="maintenance">
+                        <group>
+                            <group name="statistics">
+                                <label for="expected_mtbf" string="Expected Mean Time Between Failure"/>
+                                <div class="o_row">
+                                    <field name="expected_mtbf"/>
+                                    days
+                                </div>
+                                <label for="mtbf" string="Mean Time Between Failure"/>
+                                <div class="o_row">
+                                    <field name="mtbf"/>
+                                    days
+                                </div>
+                                <label for="estimated_next_failure" string="Estimated Next Failure"/>
+                                <div class="o_row">
+                                    <field name="estimated_next_failure"/>
+                                </div>
+                                <field name="latest_failure_date" string="Latest Failure"/>
+                                <label for="mttr" string="Mean Time To Repair"/>
+                                <div class="o_row">
+                                    <field name="mttr"/>
+                                    days
+                                </div>
+                            </group>
+                        </group>
+                    </page>
                     <page string="Attributes">
                         <field name="maintenance_attribute_line_ids">
                             <tree editable="bottom">

@@ -1,3 +1,4 @@
+from addons.spreadsheet.tests.validate_spreadsheet_data import filter_fields
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api
 import logging
@@ -14,6 +15,29 @@ class MaintenanceEquipmentCategory(models.Model):
     maintenance_measurement_line_ids = fields.One2many('maintenance.measurement.line', 'maintenance_measurement_line_id', string='Measurements')
     maintenance_transform_line_ids = fields.One2many('maintenance.transform.line', 'maintenance_transform_line_id', string='Transforms')
     maintenance_metric_line_ids = fields.One2many('maintenance.metric.line', 'maintenance_metric_line_id', string='Metrics')
+    #add field same as equipment
+    owner_user_id = fields.Many2one('res.users', string="Owner")
+    maintenance_team_id = fields.Many2one('maintenance.team', string="Maintenance Team")
+    technician_user_id = fields.Many2one('res.users', string="Technician")
+    assign_date = fields.Date(string="Assigned Date")
+    scrap_date = fields.Date(string="Scrap Date")
+    location = fields.Char(string="Location")
+
+    note = fields.Text()
+
+    partner_id = fields.Many2one('res.partner', string="Vendor")
+    partner_ref = fields.Char(string="Vendor Reference")
+    model = fields.Char(string="Model")
+    serial_no = fields.Char(string="Serial Number")
+    effective_date = fields.Many2one(string="Effective Date")
+    cost = fields.Float(string="Cost")
+    warranty_date = fields.Date(string="Warranty Expiration Date")
+
+    expected_mtbf = fields.Integer(string="Expected Mean Time Between Failure")
+    mtbf = fields.Integer(string="Mean Time Between Failure")
+    estimated_next_failure = fields.Date(string="Estimated Next Failure")
+    latest_failure_date = fields.Date(string="Latest Failure")
+    mttr = fields.Integer(string="Mean Time To Repair")
 
 
     def get_aws_client(self, service_name):
