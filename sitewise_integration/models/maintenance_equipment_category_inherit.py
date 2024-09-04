@@ -23,7 +23,7 @@ class MaintenanceEquipmentCategory(models.Model):
     scrap_date = fields.Date(string="Scrap Date")
     location = fields.Char(string="Location")
 
-    note = fields.Text()
+    note_comment = fields.Text()
 
     partner_id = fields.Many2one('res.partner', string="Vendor")
     partner_ref = fields.Char(string="Vendor Reference")
