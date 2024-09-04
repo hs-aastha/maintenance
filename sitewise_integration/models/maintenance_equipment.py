@@ -19,34 +19,16 @@ class MaintenanceEquipment(models.Model):
     @api.onchange('category_id')
     def onchange_data(self):
         if self.category_id:
-            self.attribute_ids = [(6, 0, self.category_id.maintenance_attribute_line_ids.ids)]
-            self.measurement_ids = [(6, 0, self.category_id.maintenance_measurement_line_ids.ids)]
-            self.transform_ids = [(6, 0, self.category_id.maintenance_transform_line_ids.ids)]
-            self.metric_ids = [(6, 0, self.category_id.maintenance_metric_line_ids.ids)]
+            self.attribute_ids = self.category_id.maintenance_attribute_line_ids
+            self.measurement_ids = self.category_id.maintenance_measurement_line_ids
+            self.transform_ids = self.category_id.maintenance_transform_line_ids
+            self.metric_ids = self.category_id.maintenance_metric_line_ids
             self.sitewise_model_id = self._get_sitewise_model_id(self.category_id)
         else:
             self.attribute_ids = [(5, 0, 0)]
             self.measurement_ids = [(5, 0, 0)]
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
-
-    def _get_sitewise_model_id(self, category):
-        return category.sitewise_model_id
-
-    @api.model
-    def create(self, vals):
-        # Ensure sitewise_model_id is included in the creation
-        if 'category_id' in vals:
-            category = self.env['maintenance.equipment.category'].browse(vals['category_id'])
-            vals['sitewise_model_id'] = category.sitewise_model_id
-        return super(MaintenanceEquipment, self).create(vals)
-
-    def write(self, vals):
-        # Ensure sitewise_model_id is updated correctly
-        if 'category_id' in vals:
-            category = self.env['maintenance.equipment.category'].browse(vals['category_id'])
-            vals['sitewise_model_id'] = category.sitewise_model_id
-        return super(MaintenanceEquipment, self).write(vals)
 
     def get_aws_client(self, service_name):
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
@@ -93,7 +75,7 @@ class MaintenanceEquipment(models.Model):
 
         asset_payload = {
             "assetName": self.name,
-            "assetModelId": self.sitewise_model_id,  # Use the actual asset model ID
+            "assetModelId": self.category_id.sitewise_model_id,  # Use the actual asset model ID
             "assetDescription": self.note,
         }
 
