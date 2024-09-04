@@ -13,7 +13,7 @@ class MaintenanceEquipment(models.Model):
     transform_ids = fields.One2many('maintenance.transform.line', 'equipment_id', string='Transforms')
     metric_ids = fields.One2many('maintenance.metric.line', 'equipment_id', string='Metrics')
 
-    sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=1)
+    sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=1, store=True)
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID')
 
     @api.onchange('category_id')
@@ -23,6 +23,7 @@ class MaintenanceEquipment(models.Model):
             self.measurement_ids = self.category_id.maintenance_measurement_line_ids
             self.transform_ids = self.category_id.maintenance_transform_line_ids
             self.metric_ids = self.category_id.maintenance_metric_line_ids
+            self.sitewise_model_id = self.category_id.sitewise_model_id
         else:
             self.attribute_ids = [(5, 0, 0)]
             self.measurement_ids = [(5, 0, 0)]
