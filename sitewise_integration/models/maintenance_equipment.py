@@ -37,14 +37,14 @@ class MaintenanceEquipment(models.Model):
     def create(self, vals):
         # Ensure sitewise_model_id is included in the creation
         if 'category_id' in vals:
-            category = self.env['maintenance.category'].browse(vals['category_id'])
+            category = self.env['maintenance.equipment.category'].browse(vals['category_id'])
             vals['sitewise_model_id'] = category.sitewise_model_id
         return super(MaintenanceEquipment, self).create(vals)
 
     def write(self, vals):
         # Ensure sitewise_model_id is updated correctly
         if 'category_id' in vals:
-            category = self.env['maintenance.category'].browse(vals['category_id'])
+            category = self.env['maintenance.equipment.category'].browse(vals['category_id'])
             vals['sitewise_model_id'] = category.sitewise_model_id
         return super(MaintenanceEquipment, self).write(vals)
 
