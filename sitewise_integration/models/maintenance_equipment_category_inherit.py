@@ -76,7 +76,7 @@ class MaintenanceEquipmentCategory(models.Model):
             asset_model_properties.append(property_dict)
         # Process maintenance_transform_line_ids
         for transform_line in self.maintenance_transform_line_ids:
-            if transform_line.data_type.upper() not in ['DOUBLE', 'INTEGER']:
+            if transform_line.data_type.upper() not in ['DOUBLE', 'STRING']:
                 raise ValidationError(
                     f"Invalid data type '{transform_line.data_type}' for transform '{transform_line.name.name}'. Must be 'DOUBLE' or 'INTEGER'.")
             property_dict = {
@@ -102,7 +102,7 @@ class MaintenanceEquipmentCategory(models.Model):
             asset_model_properties.append(property_dict)
         # Process maintenance_metric_line_ids
         for metric_line in self.maintenance_metric_line_ids:
-            if metric_line.data_type.upper() not in ['DOUBLE', 'INTEGER']:
+            if metric_line.data_type.upper() not in ['DOUBLE', 'STRING']:
                 raise ValidationError(
                     f"Invalid data type '{metric_line.data_type}' for metric '{metric_line.name.name}'. Must be 'DOUBLE' or 'INTEGER'.")
             property_dict = {
