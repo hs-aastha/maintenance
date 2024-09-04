@@ -1,4 +1,3 @@
-from addons.spreadsheet.tests.validate_spreadsheet_data import filter_fields
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api
 import logging
