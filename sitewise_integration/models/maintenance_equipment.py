@@ -23,7 +23,6 @@ class MaintenanceEquipment(models.Model):
             self.measurement_ids = self.category_id.maintenance_measurement_line_ids
             self.transform_ids = self.category_id.maintenance_transform_line_ids
             self.metric_ids = self.category_id.maintenance_metric_line_ids
-            self.sitewise_model_id = self._get_sitewise_model_id(self.category_id)
         else:
             self.attribute_ids = [(5, 0, 0)]
             self.measurement_ids = [(5, 0, 0)]
