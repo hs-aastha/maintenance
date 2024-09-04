@@ -53,6 +53,9 @@ class MaintenanceEquipmentCategory(models.Model):
             asset_model_properties.append(property_dict)
         # Process maintenance_measurement_line_ids
         for measurement_line in self.maintenance_measurement_line_ids:
+            if measurement_line.data_type.upper() not in ['DOUBLE', 'INTEGER']:
+                raise ValidationError(
+                    f"Invalid data type '{measurement_line.data_type}' for transform '{measurement_line.name.name}'. Must be 'DOUBLE' or 'INTEGER'.")
             property_dict = {
                 "name": measurement_line.name.name,
                 "dataType": measurement_line.data_type.upper(),
