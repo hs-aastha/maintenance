@@ -78,7 +78,7 @@ class MaintenanceEquipmentCategory(models.Model):
         for transform_line in self.maintenance_transform_line_ids:
             if transform_line.data_type.upper() not in ['DOUBLE', 'STRING']:
                 raise ValidationError(
-                    f"Invalid data type '{transform_line.data_type}' for transform '{transform_line.name.name}'. Must be 'DOUBLE' or 'INTEGER'.")
+                    f"Invalid data type '{transform_line.data_type}' for transform '{transform_line.name.name}'. Must be 'DOUBLE' or 'STRING'.")
             property_dict = {
                 "name": transform_line.name.name,
                 "dataType": transform_line.data_type.upper(),
@@ -92,7 +92,21 @@ class MaintenanceEquipmentCategory(models.Model):
                                 "state": "DISABLED"  # Default state; adjust as needed
                             }
                         },
-                        "variables": []
+                        "variables": [
+                        {
+                            "name": "VariableName",  # Dummy static variable name
+                            "value": {
+                                "hierarchyId": "DummyHierarchyId",  # Dummy static hierarchyId
+                                "propertyId": "DummyPropertyId",  # Dummy static propertyId
+                                "propertyPath": [
+                                    {
+                                        "id": "DummyPathId",  # Dummy static path id
+                                        "name": "DummyPathName"  # Dummy static path name
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                     }
                 }
             }
@@ -104,7 +118,7 @@ class MaintenanceEquipmentCategory(models.Model):
         for metric_line in self.maintenance_metric_line_ids:
             if metric_line.data_type.upper() not in ['DOUBLE', 'STRING']:
                 raise ValidationError(
-                    f"Invalid data type '{metric_line.data_type}' for metric '{metric_line.name.name}'. Must be 'DOUBLE' or 'INTEGER'.")
+                    f"Invalid data type '{metric_line.data_type}' for metric '{metric_line.name.name}'. Must be 'DOUBLE' or 'STRING'.")
             property_dict = {
                 "name": metric_line.name.name,
                 "dataType": metric_line.data_type.upper(),
