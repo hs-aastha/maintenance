@@ -80,6 +80,12 @@ class MaintenanceEquipmentCategory(models.Model):
                 "type": {
                     "transform": {
                         "expression": transform_line.formula or "",
+                        "processingConfig": {
+                            "computeLocation": "EDGE",  # Default location; adjust as needed
+                            "forwardingConfig": {
+                                "state": "DISABLED"  # Default state; adjust as needed
+                            }
+                        },
                         "variables": []
                     }
                 }
@@ -97,11 +103,14 @@ class MaintenanceEquipmentCategory(models.Model):
                 "type": {
                     "metric": {
                         "expression": metric_line.formula or "",
+                        "processingConfig": {
+                            "computeLocation": "EDGE"  # Default location; adjust as needed
+                        },
                         "variables": [],  # Add variables if needed
                         "window": {
                             "tumbling": {
                                 "interval": metric_line.time_interval or "1d",  # Default interval
-                                # "offset": "0"  # Default offset
+                                "offset": "0"
                             }
                         }
                     }
