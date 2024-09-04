@@ -110,7 +110,7 @@ class MaintenanceEquipmentCategory(models.Model):
                         "window": {
                             "tumbling": {
                                 "interval": metric_line.time_interval or "1d",  # Default interval
-                                "offset": "0"
+                                "offset": "00"
                             }
                         }
                     }
