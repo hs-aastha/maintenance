@@ -95,14 +95,14 @@ class MaintenanceEquipmentCategory(models.Model):
                         },
                         "variables": [
                         {
-                            "name": "VariableName",  # Dummy static variable name
+                            "name": "variable_name_1",  # Updated variable name to comply with pattern
                             "value": {
-                                "hierarchyId": "DummyHierarchyId",  # Dummy static hierarchyId
-                                "propertyId": "DummyPropertyId",  # Dummy static propertyId
+                                "hierarchyId": "dummy_hierarchy_id_1",  # Updated to lowercase
+                                "propertyId": "dummy_property_id_1",  # Updated to lowercase
                                 "propertyPath": [
                                     {
-                                        "id": str(uuid.uuid4()),  # Dummy static path id
-                                        "name": "DummyPathName"  # Dummy static path name
+                                        "id": str(uuid.uuid4()),  # Generate a valid UUID
+                                        "name": "dummy_path_name_1"  # Updated to lowercase
                                     }
                                 ]
                             }
