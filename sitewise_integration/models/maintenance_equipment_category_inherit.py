@@ -3,6 +3,7 @@ from odoo import models, fields, api
 import logging
 _logger = logging.getLogger(__name__)
 import boto3
+import uuid
 
 
 class MaintenanceEquipmentCategory(models.Model):
@@ -100,7 +101,7 @@ class MaintenanceEquipmentCategory(models.Model):
                                 "propertyId": "DummyPropertyId",  # Dummy static propertyId
                                 "propertyPath": [
                                     {
-                                        "id": "DummyPathId",  # Dummy static path id
+                                        "id": str(uuid.uuid4()),  # Dummy static path id
                                         "name": "DummyPathName"  # Dummy static path name
                                     }
                                 ]
