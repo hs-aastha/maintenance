@@ -28,7 +28,7 @@ class MaintenanceEquipmentCategory(models.Model):
     partner_ref = fields.Char(string="Vendor Reference")
     model = fields.Char(string="Model")
     serial_no = fields.Char(string="Serial Number")
-    effective_date = fields.Date(string="Effective Date")
+    effective_dates = fields.Date(string="Effective Date")
     cost = fields.Float(string="Cost")
     warranty_date = fields.Date(string="Warranty Expiration Date")
 

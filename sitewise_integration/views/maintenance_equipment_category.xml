@@ -27,7 +27,7 @@
                                 <field name="serial_no"/>
                             </group>
                             <group>
-                                <field name="effective_date"/>
+                                <field name="effective_dates"/>
                                 <field name="cost" groups="maintenance.group_equipment_manager"/>
                                 <field name="warranty_date"/>
                             </group>
