@@ -97,8 +97,7 @@ class MaintenanceEquipmentCategory(models.Model):
                         {
                             "name": "variable_name_1",  # Updated variable name to comply with pattern
                             "value": {
-                                "hierarchyId": "dummy_hierarchy_id_1",  # Updated to lowercase
-                                "propertyId": "dummy_property_id_1",  # Updated to lowercase
+                                "propertyId": "dummy_property_id_1",  # Removed hierarchyId
                                 "propertyPath": [
                                     {
                                         "id": str(uuid.uuid4()),  # Generate a valid UUID
