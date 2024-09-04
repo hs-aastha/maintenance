@@ -80,6 +80,7 @@ class MaintenanceEquipmentCategory(models.Model):
                 "type": {
                     "transform": {
                         "expression": transform_line.formula or "",
+                        "variables": []
                     }
                 }
             }
@@ -113,7 +114,7 @@ class MaintenanceEquipmentCategory(models.Model):
         # Create the full payload for creating the SiteWise model
         asset_model_payload = {
             "assetModelName": self.name,
-            "assetModelDescription": self.note or '',
+            "assetModelDescription": self.note or ' ',
             "assetModelProperties": asset_model_properties
         }
         try:
