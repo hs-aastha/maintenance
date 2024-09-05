@@ -13,15 +13,15 @@
             <xpath expr="//field[@name='note']" position="after">
                 <field name="sitewise_model_id"/>
             </xpath>
-<!--            <xpath expr="//sheet/group[1]" position="after">-->
-<!--                <group position="right">-->
-<!--                    <field name="owner_user_id"/>-->
-<!--                    <field name="maintenance_team_id"/>-->
-<!--                    <field name="assign_date"/>-->
-<!--                    <field name="scrap_date"/>-->
-<!--                    <field name="location"/>-->
-<!--                </group>-->
-<!--            </xpath>-->
+            <xpath expr="//group[@name='group_alias']]" position="after">
+                <group position="right">
+                    <field name="owner_user_id"/>
+                    <field name="maintenance_team_id"/>
+                    <field name="assign_date"/>
+                    <field name="scrap_date"/>
+                    <field name="location"/>
+                </group>
+            </xpath>
             <xpath expr="//sheet" position="inside">
                 <notebook>
                     <page string="Description">
