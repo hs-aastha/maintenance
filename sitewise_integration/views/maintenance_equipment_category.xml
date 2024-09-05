@@ -14,7 +14,7 @@
                 <field name="sitewise_model_id"/>
             </xpath>
             <xpath expr="//group[@name='group_alias']]" position="after">
-                <group position="right">
+                <group>
                     <field name="owner_user_id"/>
                     <field name="maintenance_team_id"/>
                     <field name="assign_date"/>
