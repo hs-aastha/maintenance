@@ -13,36 +13,13 @@
             <xpath expr="//field[@name='note']" position="after">
                 <field name="sitewise_model_id"/>
             </xpath>
-            <xpath expr="//sheet" position="inside">
-                <group colspan="2">
-                    <!-- Existing fields in the left column -->
-                    <group>
-                        <group>
-                            <field name="technician_user_id" class="oe_inline" domain="[('share', '=', False)]"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
-                        </group>
-                        <group name="group_alias">
-                            <label for="alias_name" string="Email Alias"/>
-                            <div name="alias_def">
-                                <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
-                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
-                                    <field name="alias_name" class="oe_inline"/>@
-                                    <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com" options="{'no_create': True, 'no_open': True}"/>
-                                </div>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="note"/>
-                        </group>
-                    </group>
-                    <!-- New additional information fields in the right column -->
-                    <group string="Additional Information">
-                        <field name="owner_user_id"/>
-                        <field name="maintenance_team_id"/>
-                        <field name="assign_date"/>
-                        <field name="scrap_date"/>
-                        <field name="location"/>
-                    </group>
+            <xpath expr="//sheet/group[1]" position="after">
+                <group string="Additional Information" position="right">
+                    <field name="owner_user_id"/>
+                    <field name="maintenance_team_id"/>
+                    <field name="assign_date"/>
+                    <field name="scrap_date"/>
+                    <field name="location"/>
                 </group>
             </xpath>
             <xpath expr="//sheet" position="inside">
