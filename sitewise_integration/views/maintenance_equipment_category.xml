@@ -34,6 +34,7 @@
                         <field name="owner_user_id"/>
                         <field name="maintenance_team_id"/>
                         <field name="assign_date"/>
+                        <field name="scrap_date"/>
                     </group>
                     <group name="group_alias">
                         <label for="alias_name" string="Email Alias"/>
@@ -46,7 +47,6 @@
                             </div>
                         </div>
                         <field name="note"/>
-                        <field name="scrap_date"/>
                         <field name="location"/>
                         <field name="sitewise_model_id"/>
                     </group>
