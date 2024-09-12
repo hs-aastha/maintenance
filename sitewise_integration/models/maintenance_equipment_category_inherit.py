@@ -163,9 +163,13 @@ class MaintenanceEquipmentCategory(models.Model):
 
         # Prepare hierarchy information
         for child in self.child_ids:
+            if not child.sitewise_model_id:  # Ensure child has a valid SiteWise Model ID
+                raise ValidationError(
+                    f"Child Category '{child.name}' does not have an associated SiteWise Model. Please create the model first."
+                )
             hierarchy_dict = {
                 "name": child.name,
-                "childAssetModelId": child.sitewise_model_id,  # Assuming each child has a SiteWise Model ID
+                "childAssetModelId": child.sitewise_model_id,
             }
             asset_model_hierarchies.append(hierarchy_dict)
 
