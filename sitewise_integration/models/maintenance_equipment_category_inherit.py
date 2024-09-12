@@ -2,23 +2,26 @@ from odoo.exceptions import ValidationError
 from odoo import models, fields, api
 import logging
 import boto3
-import uuid
 
 _logger = logging.getLogger(__name__)
 
 class MaintenanceEquipmentCategory(models.Model):
     _inherit = 'maintenance.equipment.category'
-    #fields added for IDs fetched from Sitewise
+
+    # Fields added for IDs fetched from Sitewise
     sitewise_model_id = fields.Char(string='SiteWise Model ID')
-    #fields added for equipment category hierarchy
+
+    # Fields added for equipment category hierarchy
     parent_id = fields.Many2one('maintenance.equipment.category', string='Parent Category')
     child_ids = fields.One2many('maintenance.equipment.category', 'parent_id', string='Child Categories')
-    #additional fields required for sitewise integration
+
+    # Additional fields required for Sitewise integration
     maintenance_attribute_line_ids = fields.One2many('maintenance.attribute.line', 'maintenance_attribute_line_id', string='Attributes')
     maintenance_measurement_line_ids = fields.One2many('maintenance.measurement.line', 'maintenance_measurement_line_id', string='Measurements')
     maintenance_transform_line_ids = fields.One2many('maintenance.transform.line', 'maintenance_transform_line_id', string='Transforms')
     maintenance_metric_line_ids = fields.One2many('maintenance.metric.line', 'maintenance_metric_line_id', string='Metrics')
-    #add field same as equipment
+
+    # Add fields same as equipment
     owner_user_id = fields.Many2one('res.users', string="Owner")
     maintenance_team_id = fields.Many2one('maintenance.team', string="Maintenance Team")
     technician_user_id = fields.Many2one('res.users', string="Technician")
@@ -41,8 +44,7 @@ class MaintenanceEquipmentCategory(models.Model):
 
     def get_aws_client(self, service_name):
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
-        aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param(
-            'sitewise_integration.aws_secret_access_key')
+        aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_secret_access_key')
         aws_region = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_region')
 
         # Add logging to check parameter values
@@ -60,6 +62,8 @@ class MaintenanceEquipmentCategory(models.Model):
     def create_sitewise_model(self):
         client = self.get_aws_client('iotsitewise')
         asset_model_properties = []
+        asset_model_hierarchies = []
+
         # Process maintenance_attribute_line_ids
         for attr_line in self.maintenance_attribute_line_ids:
             property_dict = {
@@ -75,11 +79,12 @@ class MaintenanceEquipmentCategory(models.Model):
             if attr_line.external_id:
                 property_dict["externalId"] = attr_line.external_id
             asset_model_properties.append(property_dict)
+
         # Process maintenance_measurement_line_ids
         for measurement_line in self.maintenance_measurement_line_ids:
             if measurement_line.data_type.upper() not in ['DOUBLE', 'INTEGER']:
                 raise ValidationError(
-                    f"Invalid data type '{measurement_line.data_type}' for transform '{measurement_line.name.name}'. Must be 'DOUBLE' or 'INTEGER'.")
+                    f"Invalid data type '{measurement_line.data_type}' for measurement '{measurement_line.name.name}'. Must be 'DOUBLE' or 'INTEGER'.")
             property_dict = {
                 "name": measurement_line.name.name,
                 "dataType": measurement_line.data_type.upper(),
@@ -98,6 +103,7 @@ class MaintenanceEquipmentCategory(models.Model):
             if measurement_line.external_id:
                 property_dict["externalId"] = measurement_line.external_id
             asset_model_properties.append(property_dict)
+
         # Process maintenance_transform_line_ids
         for transform_line in self.maintenance_transform_line_ids:
             if transform_line.data_type.upper() not in ['DOUBLE', 'STRING']:
@@ -116,11 +122,7 @@ class MaintenanceEquipmentCategory(models.Model):
                                 "state": "DISABLED"  # Default state; adjust as needed
                             }
                         },
-                        "variables": [
-                        {
-                            "name": "variable_name_1",  # Updated variable name to comply with pattern
-                        }
-                    ]
+                        "variables": [{"name": "variable_name_1"}]  # Update as needed
                     }
                 }
             }
@@ -128,6 +130,7 @@ class MaintenanceEquipmentCategory(models.Model):
             if transform_line.external_id:
                 property_dict["externalId"] = transform_line.external_id
             asset_model_properties.append(property_dict)
+
         # Process maintenance_metric_line_ids
         for metric_line in self.maintenance_metric_line_ids:
             if metric_line.data_type.upper() not in ['DOUBLE', 'STRING']:
@@ -157,22 +160,23 @@ class MaintenanceEquipmentCategory(models.Model):
             if metric_line.external_id:
                 property_dict["externalId"] = metric_line.external_id
             asset_model_properties.append(property_dict)
+
         # Prepare hierarchy information
-        hierarchy_payload = []
-        if self.parent_id:
-            hierarchy_payload.append({
-                "id": "parent-child-hierarchy",
-                "name": "Parent-Child Relationship",
-                "childAssetModelId": self.parent_id.sitewise_model_id
-            })
+        for child in self.child_ids:
+            hierarchy_dict = {
+                "name": child.name,
+                "childAssetModelId": child.sitewise_model_id,  # Assuming each child has a SiteWise Model ID
+            }
+            asset_model_hierarchies.append(hierarchy_dict)
+
         # Create the full payload for creating the SiteWise model
         asset_model_payload = {
             "assetModelName": self.name,
             "assetModelDescription": self.note or ' ',
             "assetModelProperties": asset_model_properties,
-            # adding hierarchy information to asset payload
-            "hierarchies": hierarchy_payload
+            "assetModelHierarchies": asset_model_hierarchies,  # Corrected parameter name
         }
+
         try:
             # Send the payload to AWS SiteWise to create the asset model
             response = client.create_asset_model(**asset_model_payload)
@@ -181,12 +185,9 @@ class MaintenanceEquipmentCategory(models.Model):
             raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
             return None
 
-
     def button_create_model(self):
         for record in self:
             response = record.create_sitewise_model()
             if response and 'assetModelId' in response:
                 record.sitewise_model_id = response['assetModelId']
             # You can add further logic to handle the response if needed
-
-
