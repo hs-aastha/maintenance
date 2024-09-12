@@ -2,9 +2,9 @@ import boto3
 from odoo import models, fields, api
 import logging
 from odoo.exceptions import ValidationError
+import time
 
 _logger = logging.getLogger(__name__)
-
 
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
@@ -71,6 +71,31 @@ class MaintenanceEquipment(models.Model):
         except Exception as e:
             raise ValidationError(f"Failed to create asset in AWS IoT SiteWise: {str(e)}")
 
+    def wait_for_asset_active(self, asset_id, timeout=300, interval=5):
+        """
+        Wait for the asset to become ACTIVE within the specified timeout.
+        """
+        client = self.get_aws_client('iotsitewise')
+        elapsed_time = 0
+
+        while elapsed_time < timeout:
+            try:
+                response = client.describe_asset(assetId=asset_id)
+                status = response.get('assetStatus', {}).get('state', '')
+
+                if status == 'ACTIVE':
+                    return True
+                elif status in ('FAILED', 'DELETING'):
+                    raise ValidationError(f"Asset '{asset_id}' is in '{status}' state, which is not valid for operations.")
+                
+                time.sleep(interval)
+                elapsed_time += interval
+            except Exception as e:
+                _logger.error(f"Error checking asset status for {asset_id}: {str(e)}")
+                raise ValidationError(f"Error checking asset status for {asset_id}: {str(e)}")
+
+        raise ValidationError(f"Asset '{asset_id}' did not become ACTIVE within the timeout period.")
+
     def configure_sitewise_asset(self):
         client = self.get_aws_client('iotsitewise')
 
@@ -94,6 +119,10 @@ class MaintenanceEquipment(models.Model):
         # Add Child Assets to the Parent Asset in SiteWise
         for child in self.child_ids:
             if child.sitewise_asset_id:  # Ensure child asset is already created
+                # Wait for the child asset to be ACTIVE
+                if not self.wait_for_asset_active(child.sitewise_asset_id):
+                    raise ValidationError(f"Child asset '{child.name}' is not in ACTIVE state and cannot be associated.")
+
                 try:
                     client.associate_assets(
                         assetId=self.sitewise_asset_id,  # Parent asset ID
@@ -113,7 +142,12 @@ class MaintenanceEquipment(models.Model):
             # Check if the asset creation was successful
             if response and 'assetId' in response:
                 record.sitewise_asset_id = response['assetId']
-                # Step 2: Configure the Asset Post-Creation
+
+                # Step 2: Wait for the asset to become ACTIVE
+                if not record.wait_for_asset_active(record.sitewise_asset_id):
+                    raise ValidationError(f"Asset '{record.name}' did not become ACTIVE in the expected time.")
+
+                # Step 3: Configure the Asset Post-Creation
                 record.configure_sitewise_asset()
             else:
                 raise ValidationError("Failed to create asset in AWS IoT SiteWise.")
