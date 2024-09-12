@@ -14,7 +14,7 @@ class MaintenanceEquipment(models.Model):
     transform_ids = fields.One2many('maintenance.transform.line', 'equipment_id', string='Transforms')
     metric_ids = fields.One2many('maintenance.metric.line', 'equipment_id', string='Metrics')
     #fields added for IDs fetched from Sitewise
-    sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=1, store=True)
+    sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=True, store=True)
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID')
     #fields added for equipment hierarchy
     parent_id = fields.Many2one('maintenance.equipment', string='Parent Equipment')
