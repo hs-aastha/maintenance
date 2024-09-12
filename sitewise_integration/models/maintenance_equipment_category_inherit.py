@@ -1,15 +1,19 @@
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api
 import logging
-_logger = logging.getLogger(__name__)
 import boto3
 import uuid
 
+_logger = logging.getLogger(__name__)
 
 class MaintenanceEquipmentCategory(models.Model):
     _inherit = 'maintenance.equipment.category'
-
+    #fields added for IDs fetched from Sitewise
     sitewise_model_id = fields.Char(string='SiteWise Model ID')
+    #fields added for equipment category hierarchy
+    parent_id = fields.Many2one('maintenance.equipment.category', string='Parent Category')
+    child_ids = fields.One2many('maintenance.equipment.category', 'parent_id', string='Child Categories')
+    #additional fields required for sitewise integration
     maintenance_attribute_line_ids = fields.One2many('maintenance.attribute.line', 'maintenance_attribute_line_id', string='Attributes')
     maintenance_measurement_line_ids = fields.One2many('maintenance.measurement.line', 'maintenance_measurement_line_id', string='Measurements')
     maintenance_transform_line_ids = fields.One2many('maintenance.transform.line', 'maintenance_transform_line_id', string='Transforms')
@@ -21,9 +25,7 @@ class MaintenanceEquipmentCategory(models.Model):
     assign_date = fields.Date(string="Assigned Date")
     scrap_date = fields.Date(string="Scrap Date")
     location = fields.Char(string="Location")
-
     note_comment = fields.Text()
-
     partner_id = fields.Many2one('res.partner', string="Vendor")
     partner_ref = fields.Char(string="Vendor Reference")
     model = fields.Char(string="Model")
@@ -31,13 +33,11 @@ class MaintenanceEquipmentCategory(models.Model):
     effective_dates = fields.Date(string="Effective Date")
     cost = fields.Float(string="Cost")
     warranty_date = fields.Date(string="Warranty Expiration Date")
-
     expected_mtbf = fields.Integer(string="Expected Mean Time Between Failure")
     mtbf = fields.Integer(string="Mean Time Between Failure")
     estimated_next_failure = fields.Date(string="Estimated Next Failure")
     latest_failure_date = fields.Date(string="Latest Failure")
     mttr = fields.Integer(string="Mean Time To Repair")
-
 
     def get_aws_client(self, service_name):
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
@@ -157,11 +157,21 @@ class MaintenanceEquipmentCategory(models.Model):
             if metric_line.external_id:
                 property_dict["externalId"] = metric_line.external_id
             asset_model_properties.append(property_dict)
+        # Prepare hierarchy information
+        hierarchy_payload = []
+        if self.parent_id:
+            hierarchy_payload.append({
+                "id": "parent-child-hierarchy",
+                "name": "Parent-Child Relationship",
+                "childAssetModelId": self.parent_id.sitewise_model_id
+            })
         # Create the full payload for creating the SiteWise model
         asset_model_payload = {
             "assetModelName": self.name,
             "assetModelDescription": self.note or ' ',
-            "assetModelProperties": asset_model_properties
+            "assetModelProperties": asset_model_properties,
+            # adding hierarchy information to asset payload
+            "hierarchies": hierarchy_payload
         }
         try:
             # Send the payload to AWS SiteWise to create the asset model

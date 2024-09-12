@@ -8,13 +8,17 @@ _logger = logging.getLogger(__name__)
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
+    #additional fields required for sitewise integration
     attribute_ids = fields.One2many('maintenance.attribute.line', 'equipment_id', string='Attributes')
     measurement_ids = fields.One2many('maintenance.measurement.line', 'equipment_id', string='Measurements')
     transform_ids = fields.One2many('maintenance.transform.line', 'equipment_id', string='Transforms')
     metric_ids = fields.One2many('maintenance.metric.line', 'equipment_id', string='Metrics')
-
+    #fields added for IDs fetched from Sitewise
     sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=1, store=True)
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID')
+    #fields added for equipment hierarchy
+    parent_id = fields.Many2one('maintenance.equipment', string='Parent Equipment')
+    child_ids = fields.One2many('maintenance.equipment', 'parent_id', string='Child Equipments')
 
     @api.onchange('category_id')
     def onchange_data(self):
@@ -30,6 +34,7 @@ class MaintenanceEquipment(models.Model):
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
 
+    #Establishing connection to AWS
     def get_aws_client(self, service_name):
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
         aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param(
