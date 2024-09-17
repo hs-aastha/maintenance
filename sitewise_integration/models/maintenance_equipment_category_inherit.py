@@ -189,8 +189,15 @@ class MaintenanceEquipmentCategory(models.Model):
             # Send the payload to AWS SiteWise to create the asset model
             response = client.create_asset_model(**asset_model_payload)
             self.sitewise_model_id = response['assetModelId']
-            # Assuming the first hierarchy is used
-            self.sitewise_hierarchy_id = response['assetModelHierarchies'][0]['id']
+            # Store the correct hierarchy ID
+            if 'assetModelHierarchies' in response:
+                for hierarchy in response['assetModelHierarchies']:
+                    # Assuming you have logic to determine which hierarchy to store
+                    if hierarchy['name'] == self.name:
+                        self.sitewise_hierarchy_id = hierarchy['id']
+                        # Add logging to confirm if correct hierarchy ID is being stored
+                        _logger.info(f"Stored Hierarchy ID for {self.name}: {self.sitewise_hierarchy_id}")
+                        break
             return response
         except client.exceptions.ResourceAlreadyExistsException:
             raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")

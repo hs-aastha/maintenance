@@ -130,6 +130,8 @@ class MaintenanceEquipment(models.Model):
                     raise ValidationError(f"Child asset '{child.name}' is not in ACTIVE state and cannot be associated.")
 
                 try:
+                    # Log the Hierarchy ID being used
+                    _logger.info(f"Associating child asset '{child.name}' using Hierarchy ID: {self.category_id.sitewise_hierarchy_id}")
                     client.associate_assets(
                         assetId=self.sitewise_asset_id,  # Parent asset ID
                         childAssetId=child.sitewise_asset_id,
