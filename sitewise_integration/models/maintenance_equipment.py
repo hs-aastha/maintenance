@@ -65,11 +65,17 @@ class MaintenanceEquipment(models.Model):
 
         try:
             response = client.create_asset(**asset_payload)
-            return response
+            if response and 'assetId' in response:
+                self.sitewise_asset_id = response['assetId']
+                _logger.info(f"Asset '{self.name}' created in SiteWise with ID: {self.sitewise_asset_id}")
+            else:
+                raise ValidationError("Failed to create asset in AWS IoT SiteWise.")
         except client.exceptions.ResourceAlreadyExistsException:
             raise ValidationError(f"Asset with name '{self.name}' already exists in AWS IoT SiteWise.")
         except Exception as e:
             raise ValidationError(f"Failed to create asset in AWS IoT SiteWise: {str(e)}")
+
+        return response
 
     def wait_for_asset_active(self, asset_id, timeout=300, interval=5):
         """
@@ -127,7 +133,7 @@ class MaintenanceEquipment(models.Model):
                     client.associate_assets(
                         assetId=self.sitewise_asset_id,  # Parent asset ID
                         childAssetId=child.sitewise_asset_id,
-                        hierarchyId=self.category_id.sitewise_model_id  # The hierarchy ID of the model
+                        hierarchyId=self.category_id.sitewise_hierarchy_id  # The hierarchy ID of the model
                     )
                 except client.exceptions.ResourceNotFoundException:
                     raise ValidationError(f"Child asset '{child.name}' not found in AWS IoT SiteWise.")

@@ -2,6 +2,7 @@ from odoo.exceptions import ValidationError
 from odoo import models, fields, api
 import logging
 import boto3
+import time
 
 _logger = logging.getLogger(__name__)
 
@@ -10,6 +11,8 @@ class MaintenanceEquipmentCategory(models.Model):
 
     # Fields added for IDs fetched from Sitewise
     sitewise_model_id = fields.Char(string='SiteWise Model ID')
+    # New field for hierarchy ID
+    sitewise_hierarchy_id = fields.Char(string='SiteWise Hierarchy ID', readonly=True)
 
     # Fields added for equipment category hierarchy
     parent_id = fields.Many2one('maintenance.equipment.category', string='Parent Category')
@@ -64,6 +67,7 @@ class MaintenanceEquipmentCategory(models.Model):
         asset_model_properties = []
         asset_model_hierarchies = []
 
+        # Prepare asset model properties
         # Process maintenance_attribute_line_ids
         for attr_line in self.maintenance_attribute_line_ids:
             property_dict = {
@@ -73,7 +77,7 @@ class MaintenanceEquipmentCategory(models.Model):
                     "attribute": {
                         "defaultValue": attr_line.default_value or ""
                     }
-                }
+                }   
             }
             # Add externalId field if it exists
             if attr_line.external_id:
@@ -184,10 +188,14 @@ class MaintenanceEquipmentCategory(models.Model):
         try:
             # Send the payload to AWS SiteWise to create the asset model
             response = client.create_asset_model(**asset_model_payload)
+            self.sitewise_model_id = response['assetModelId']
+            # Assuming the first hierarchy is used
+            self.sitewise_hierarchy_id = response['assetModelHierarchies'][0]['id']
             return response
         except client.exceptions.ResourceAlreadyExistsException:
             raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
-            return None
+        except Exception as e:
+            raise ValidationError(f"Error creating SiteWise model: {str(e)}")
 
     def button_create_model(self):
         for record in self:
