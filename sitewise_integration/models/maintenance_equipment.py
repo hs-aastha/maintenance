@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 import time
 
 _logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
 
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
@@ -23,6 +24,7 @@ class MaintenanceEquipment(models.Model):
 
     @api.onchange('category_id')
     def onchange_data(self):
+        _logger.debug("Entering onchange_data function for equipment with category ID: %s", self.category_id.id if self.category_id else 'None')
         if self.category_id:
             self.attribute_ids = self.category_id.maintenance_attribute_line_ids
             self.measurement_ids = self.category_id.maintenance_measurement_line_ids
@@ -34,9 +36,11 @@ class MaintenanceEquipment(models.Model):
             self.measurement_ids = [(5, 0, 0)]
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
+        _logger.debug("Exiting onchange_data function")
 
     # Establishing connection to AWS
     def get_aws_client(self, service_name):
+        _logger.debug("Entering get_aws_client function")
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
         aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param(
             'sitewise_integration.aws_secret_access_key')
@@ -47,6 +51,7 @@ class MaintenanceEquipment(models.Model):
         _logger.info("AWS Secret Access Key: %s", aws_secret_access_key)
         _logger.info("AWS Region: %s", aws_region)
 
+        _logger.debug("Exiting get_aws_client function")
         return boto3.client(
             service_name,
             region_name=aws_region,
@@ -55,6 +60,7 @@ class MaintenanceEquipment(models.Model):
         )
 
     def create_sitewise_asset(self):
+        _logger.debug("Entering create_sitewise_asset function")
         client = self.get_aws_client('iotsitewise')
 
         asset_payload = {
@@ -63,8 +69,10 @@ class MaintenanceEquipment(models.Model):
             "assetDescription": self.note,
         }
 
+        _logger.debug(f"Calling AWS API to create asset with payload: {asset_payload}")
         try:
             response = client.create_asset(**asset_payload)
+            _logger.debug(f"AWS response for asset creation: {response}")
             if response and 'assetId' in response:
                 self.sitewise_asset_id = response['assetId']
                 _logger.info(f"Asset '{self.name}' created in SiteWise with ID: {self.sitewise_asset_id}")
@@ -73,14 +81,17 @@ class MaintenanceEquipment(models.Model):
         except client.exceptions.ResourceAlreadyExistsException:
             raise ValidationError(f"Asset with name '{self.name}' already exists in AWS IoT SiteWise.")
         except Exception as e:
+            _logger.error(f"Exception during asset creation: {str(e)}")
             raise ValidationError(f"Failed to create asset in AWS IoT SiteWise: {str(e)}")
 
+        _logger.debug("Exiting create_sitewise_asset function")
         return response
 
     def wait_for_asset_active(self, asset_id, timeout=300, interval=5):
         """
         Wait for the asset to become ACTIVE within the specified timeout.
         """
+        _logger.debug(f"Entering wait_for_asset_active function for asset_id: {asset_id}")
         client = self.get_aws_client('iotsitewise')
         elapsed_time = 0
 
@@ -88,8 +99,10 @@ class MaintenanceEquipment(models.Model):
             try:
                 response = client.describe_asset(assetId=asset_id)
                 status = response.get('assetStatus', {}).get('state', '')
+                _logger.debug(f"Asset {asset_id} status: {status}")
 
                 if status == 'ACTIVE':
+                    _logger.info(f"Asset {asset_id} is ACTIVE")
                     return True
                 elif status in ('FAILED', 'DELETING'):
                     raise ValidationError(f"Asset '{asset_id}' is in '{status}' state, which is not valid for operations.")
@@ -100,15 +113,18 @@ class MaintenanceEquipment(models.Model):
                 _logger.error(f"Error checking asset status for {asset_id}: {str(e)}")
                 raise ValidationError(f"Error checking asset status for {asset_id}: {str(e)}")
 
+        _logger.error(f"Asset '{asset_id}' did not become ACTIVE within the timeout period.")
         raise ValidationError(f"Asset '{asset_id}' did not become ACTIVE within the timeout period.")
 
     def configure_sitewise_asset(self):
+        _logger.debug("Entering configure_sitewise_asset function")
         client = self.get_aws_client('iotsitewise')
 
         # Update attributes in SiteWise
         for attribute_line in self.attribute_ids:
             if attribute_line.name.external_id:
                 try:
+                    _logger.debug(f"Updating attribute '{attribute_line.name.name}' in SiteWise")
                     client.update_asset_property(
                         assetId=self.sitewise_asset_id,
                         propertyId=attribute_line.name.external_id,
@@ -120,6 +136,7 @@ class MaintenanceEquipment(models.Model):
                 except client.exceptions.ResourceNotFoundException:
                     raise ValidationError(f"Property '{attribute_line.name.name}' not found in AWS IoT SiteWise.")
                 except Exception as e:
+                    _logger.error(f"Failed to update property '{attribute_line.name.name}': {str(e)}")
                     raise ValidationError(f"Failed to update property '{attribute_line.name.name}': {str(e)}")
 
         # Add Child Assets to the Parent Asset in SiteWise
@@ -140,9 +157,11 @@ class MaintenanceEquipment(models.Model):
                 except client.exceptions.ResourceNotFoundException:
                     raise ValidationError(f"Child asset '{child.name}' not found in AWS IoT SiteWise.")
                 except Exception as e:
+                    _logger.error(f"Failed to associate child asset '{child.name}': {str(e)}")
                     raise ValidationError(f"Failed to associate child asset '{child.name}': {str(e)}")
 
     def button_create_asset(self):
+        _logger.debug("Entering button_create_asset function")
         for record in self:
             # Step 1: Create the Asset in SiteWise
             response = record.create_sitewise_asset()
@@ -159,3 +178,4 @@ class MaintenanceEquipment(models.Model):
                 record.configure_sitewise_asset()
             else:
                 raise ValidationError("Failed to create asset in AWS IoT SiteWise.")
+        _logger.debug("Exiting button_create_asset function")

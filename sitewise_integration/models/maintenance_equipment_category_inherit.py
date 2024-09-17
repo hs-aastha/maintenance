@@ -5,6 +5,7 @@ import boto3
 import time
 
 _logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
 
 class MaintenanceEquipmentCategory(models.Model):
     _inherit = 'maintenance.equipment.category'
@@ -46,6 +47,7 @@ class MaintenanceEquipmentCategory(models.Model):
     mttr = fields.Integer(string="Mean Time To Repair")
 
     def get_aws_client(self, service_name):
+        _logger.debug("Entering get_aws_client function")
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
         aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_secret_access_key')
         aws_region = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_region')
@@ -55,6 +57,7 @@ class MaintenanceEquipmentCategory(models.Model):
         _logger.info("AWS Secret Access Key: %s", aws_secret_access_key)
         _logger.info("AWS Region: %s", aws_region)
 
+        _logger.debug("Exiting get_aws_client function")
         return boto3.client(
             service_name,
             region_name=aws_region,
@@ -63,6 +66,7 @@ class MaintenanceEquipmentCategory(models.Model):
         )
 
     def create_sitewise_model(self):
+        _logger.debug("Entering create_sitewise_model function")
         client = self.get_aws_client('iotsitewise')
         asset_model_properties = []
         asset_model_hierarchies = []
@@ -185,9 +189,11 @@ class MaintenanceEquipmentCategory(models.Model):
             "assetModelHierarchies": asset_model_hierarchies,  # Corrected parameter name
         }
 
+        _logger.debug(f"Calling AWS API to create asset model with payload: {asset_model_payload}")
         try:
             # Send the payload to AWS SiteWise to create the asset model
             response = client.create_asset_model(**asset_model_payload)
+            _logger.debug(f"AWS response for model creation: {response}")
             self.sitewise_model_id = response['assetModelId']
             # Store the correct hierarchy ID
             if 'assetModelHierarchies' in response:
@@ -198,15 +204,19 @@ class MaintenanceEquipmentCategory(models.Model):
                         # Add logging to confirm if correct hierarchy ID is being stored
                         _logger.info(f"Stored Hierarchy ID for {self.name}: {self.sitewise_hierarchy_id}")
                         break
+            _logger.debug("Exiting create_sitewise_model function")
             return response
         except client.exceptions.ResourceAlreadyExistsException:
             raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
         except Exception as e:
+            _logger.error(f"Error creating SiteWise model: {str(e)}")
             raise ValidationError(f"Error creating SiteWise model: {str(e)}")
 
     def button_create_model(self):
+        _logger.debug("Entering button_create_model function")
         for record in self:
             response = record.create_sitewise_model()
             if response and 'assetModelId' in response:
                 record.sitewise_model_id = response['assetModelId']
+        _logger.debug("Exiting button_create_model function")
             # You can add further logic to handle the response if needed
