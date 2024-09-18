@@ -198,6 +198,7 @@ class MaintenanceEquipmentCategory(models.Model):
             # Store the correct hierarchy ID
             if 'assetModelHierarchies' in response:
                 for hierarchy in response['assetModelHierarchies']:
+                    _logger.debug(f"Checking hierarchy: {hierarchy}")
                     # Assuming you have logic to determine which hierarchy to store
                     if hierarchy['name'] == self.name:
                         self.sitewise_hierarchy_id = hierarchy['id']

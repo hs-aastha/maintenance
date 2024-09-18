@@ -81,7 +81,7 @@ class MaintenanceEquipment(models.Model):
         except client.exceptions.ResourceAlreadyExistsException:
             raise ValidationError(f"Asset with name '{self.name}' already exists in AWS IoT SiteWise.")
         except Exception as e:
-            _logger.error(f"Exception during asset creation: {str(e)}")
+            _logger.exception("Exception during asset creation")
             raise ValidationError(f"Failed to create asset in AWS IoT SiteWise: {str(e)}")
 
         _logger.debug("Exiting create_sitewise_asset function")
@@ -145,7 +145,10 @@ class MaintenanceEquipment(models.Model):
                 # Wait for the child asset to be ACTIVE
                 if not self.wait_for_asset_active(child.sitewise_asset_id):
                     raise ValidationError(f"Child asset '{child.name}' is not in ACTIVE state and cannot be associated.")
-
+                hierarchy_id = self.category_id.sitewise_hierarchy_id
+                if not hierarchy_id:
+                    _logger.error(f"Hierarchy ID not set for category {self.category_id.name} while associating child asset '{child.name}' to parent asset '{self.name}'")
+                    raise ValidationError("Hierarchy ID not set for the selected equipment category '{self.category_id.name}'.")
                 try:
                     # Log the Hierarchy ID being used
                     _logger.info(f"Associating child asset '{child.name}' using Hierarchy ID: {self.category_id.sitewise_hierarchy_id}")
@@ -153,6 +156,7 @@ class MaintenanceEquipment(models.Model):
                         assetId=self.sitewise_asset_id,  # Parent asset ID
                         childAssetId=child.sitewise_asset_id,
                         hierarchyId=self.category_id.sitewise_hierarchy_id  # The hierarchy ID of the model
+                        
                     )
                 except client.exceptions.ResourceNotFoundException:
                     raise ValidationError(f"Child asset '{child.name}' not found in AWS IoT SiteWise.")
