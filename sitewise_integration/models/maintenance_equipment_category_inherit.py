@@ -76,6 +76,8 @@ class MaintenanceEquipmentCategory(models.Model):
         while elapsed_time < timeout:
             try:
                 response = client.describe_asset_model(assetModelId=asset_model_id)
+                # New logging statement for full response   
+                _logger.debug(f"Full response from describe_asset_model: {response}")
                 status = response.get('assetModelStatus', {}).get('state', '')
                 _logger.debug(f"Model {asset_model_id} status: {status}")
 
@@ -230,12 +232,17 @@ class MaintenanceEquipmentCategory(models.Model):
 
             # Store the correct hierarchy ID
             hierarchies = model_details.get('assetModelHierarchies', [])
+
+            if not hierarchies:
+                _logger.error(f"No hierarchies found in the asset model: {model_details}")
+                raise ValidationError("No hierarchies found in the asset model.")
+        
             for hierarchy in hierarchies:
                 if hierarchy['name'] == self.name:
                     self.sitewise_hierarchy_id = hierarchy['id']
                     _logger.info(f"Stored Hierarchy ID for {self.name}: {self.sitewise_hierarchy_id}")
                     break
-                
+
             _logger.debug("Exiting create_sitewise_model function")
             return response
         except client.exceptions.ResourceAlreadyExistsException:
