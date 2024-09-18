@@ -238,10 +238,8 @@ class MaintenanceEquipmentCategory(models.Model):
                 raise ValidationError("No hierarchies found in the asset model.")
         
             for hierarchy in hierarchies:
-                if hierarchy['name'] == self.name:
-                    self.sitewise_hierarchy_id = hierarchy['id']
-                    _logger.info(f"Stored Hierarchy ID for {self.name}: {self.sitewise_hierarchy_id}")
-                    break
+                _logger.info(f"Stored Hierarchy ID for {self.name}: {hierarchy['id']}")
+                self.sitewise_hierarchy_id = hierarchy['id']
 
             _logger.debug("Exiting create_sitewise_model function")
             return response

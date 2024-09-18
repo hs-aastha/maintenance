@@ -49,6 +49,8 @@
                         <field name="note"/>
                         <field name="location"/>
                         <field name="sitewise_model_id"/>
+                        <!-- Added field to show hierarchy ID -->
+                        <field name="sitewise_hierarchy_id"/>
                         <!-- Add hierarchy fields for parent and child categories -->
                         <field name="parent_id"/>
                         <field name="child_ids" widget="many2many_tags"/>
