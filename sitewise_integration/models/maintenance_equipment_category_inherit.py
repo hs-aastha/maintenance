@@ -64,6 +64,35 @@ class MaintenanceEquipmentCategory(models.Model):
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key
         )
+    
+    def wait_for_model_active(self, asset_model_id, timeout=300, interval=5):
+        """
+        Wait for the asset model to become ACTIVE.
+        """
+        _logger.debug(f"Waiting for asset model {asset_model_id} to become ACTIVE")
+        client = self.get_aws_client('iotsitewise')
+        elapsed_time = 0
+
+        while elapsed_time < timeout:
+            try:
+                response = client.describe_asset_model(assetModelId=asset_model_id)
+                status = response.get('assetModelStatus', {}).get('state', '')
+                _logger.debug(f"Model {asset_model_id} status: {status}")
+
+                if status == 'ACTIVE':
+                    _logger.info(f"Asset model {asset_model_id} is ACTIVE")
+                    return response
+                elif status in ('FAILED', 'DELETING'):
+                    raise ValidationError(f"Asset model '{asset_model_id}' is in '{status}' state and cannot be used.")
+                
+                time.sleep(interval)
+                elapsed_time += interval
+            except Exception as e:
+                _logger.error(f"Error checking asset model status for {asset_model_id}: {str(e)}")
+                raise ValidationError(f"Error checking asset model status for {asset_model_id}: {str(e)}")
+
+        _logger.error(f"Asset model '{asset_model_id}' did not become ACTIVE within the timeout period.")
+        raise ValidationError(f"Asset model '{asset_model_id}' did not become ACTIVE within the timeout period.")
 
     def create_sitewise_model(self):
         _logger.debug("Entering create_sitewise_model function")
@@ -195,16 +224,18 @@ class MaintenanceEquipmentCategory(models.Model):
             response = client.create_asset_model(**asset_model_payload)
             _logger.debug(f"AWS response for model creation: {response}")
             self.sitewise_model_id = response['assetModelId']
+
+            # Wait for the model to become ACTIVE
+            model_details = self.wait_for_model_active(self.sitewise_model_id)
+
             # Store the correct hierarchy ID
-            if 'assetModelHierarchies' in response:
-                for hierarchy in response['assetModelHierarchies']:
-                    _logger.debug(f"Checking hierarchy: {hierarchy}")
-                    # Assuming you have logic to determine which hierarchy to store
-                    if hierarchy['name'] == self.name:
-                        self.sitewise_hierarchy_id = hierarchy['id']
-                        # Add logging to confirm if correct hierarchy ID is being stored
-                        _logger.info(f"Stored Hierarchy ID for {self.name}: {self.sitewise_hierarchy_id}")
-                        break
+            hierarchies = model_details.get('assetModelHierarchies', [])
+            for hierarchy in hierarchies:
+                if hierarchy['name'] == self.name:
+                    self.sitewise_hierarchy_id = hierarchy['id']
+                    _logger.info(f"Stored Hierarchy ID for {self.name}: {self.sitewise_hierarchy_id}")
+                    break
+                
             _logger.debug("Exiting create_sitewise_model function")
             return response
         except client.exceptions.ResourceAlreadyExistsException:
