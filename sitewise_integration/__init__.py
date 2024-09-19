@@ -19,6 +19,7 @@ for subdir in os.listdir(lib_path):
         sys.path.append(full_subdir_path)
         _logger.info("Added to sys.path: %s", full_subdir_path)
 
+_logger.info("Added lib_path to sys.path: %s", lib_path)
 _logger.info("Current sys.path: %s", sys.path)
 
 # Import models after setting up the paths
