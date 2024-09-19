@@ -201,23 +201,26 @@ class MaintenanceEquipmentCategory(models.Model):
             asset_model_properties.append(property_dict)
 
         # Prepare hierarchy information
-        for child in self.child_ids:
-            if not child.sitewise_model_id:  # Ensure child has a valid SiteWise Model ID
-                raise ValidationError(
-                    f"Child Category '{child.name}' does not have an associated SiteWise Model. Please create the model first."
-                )
-            hierarchy_dict = {
-                "name": child.name,
-                "childAssetModelId": child.sitewise_model_id,
-            }
-            asset_model_hierarchies.append(hierarchy_dict)
+        if not self.child_ids:
+            _logger.info(f"No child categories found for {self.name}. Proceeding without hierarchies.")
+        else:
+            for child in self.child_ids:
+                if not child.sitewise_model_id:  # Ensure child has a valid SiteWise Model ID
+                    raise ValidationError(
+                        f"Child Category '{child.name}' does not have an associated SiteWise Model. Please create the model first."
+                    )
+                hierarchy_dict = {
+                    "name": child.name,
+                    "childAssetModelId": child.sitewise_model_id,
+                }
+                asset_model_hierarchies.append(hierarchy_dict)
 
         # Create the full payload for creating the SiteWise model
         asset_model_payload = {
             "assetModelName": self.name,
             "assetModelDescription": self.note or ' ',
             "assetModelProperties": asset_model_properties,
-            "assetModelHierarchies": asset_model_hierarchies,  # Corrected parameter name
+            "assetModelHierarchies": asset_model_hierarchies,
         }
 
         _logger.debug(f"Calling AWS API to create asset model with payload: {asset_model_payload}")
@@ -230,16 +233,15 @@ class MaintenanceEquipmentCategory(models.Model):
             # Wait for the model to become ACTIVE
             model_details = self.wait_for_model_active(self.sitewise_model_id)
 
-            # Store the correct hierarchy ID
+            # Check for hierarchies only if child_ids exist
             hierarchies = model_details.get('assetModelHierarchies', [])
-
-            if not hierarchies:
+            if self.child_ids and not hierarchies:
                 _logger.error(f"No hierarchies found in the asset model: {model_details}")
                 raise ValidationError("No hierarchies found in the asset model.")
-        
-            for hierarchy in hierarchies:
-                _logger.info(f"Stored Hierarchy ID for {self.name}: {hierarchy['id']}")
-                self.sitewise_hierarchy_id = hierarchy['id']
+            else:
+                for hierarchy in hierarchies:
+                    _logger.info(f"Stored Hierarchy ID for {self.name}: {hierarchy['id']}")
+                    self.sitewise_hierarchy_id = hierarchy['id']
 
             _logger.debug("Exiting create_sitewise_model function")
             return response
