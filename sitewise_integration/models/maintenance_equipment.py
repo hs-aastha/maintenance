@@ -16,7 +16,7 @@ class MaintenanceEquipment(models.Model):
     transform_ids = fields.One2many('maintenance.transform.line', 'equipment_id', string='Transforms')
     metric_ids = fields.One2many('maintenance.metric.line', 'equipment_id', string='Metrics')
     # Fields added for IDs fetched from SiteWise
-    sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=True, store=True)
+    sitewise_model_id = fields.Char(string='SiteWise Model ID', related='category_id.sitewise_model_id', readonly=True, store=True)
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID', readonly=True,)
     # Fields added for equipment hierarchy
     parent_id = fields.Many2one('maintenance.equipment', string='Parent Equipment')
@@ -30,7 +30,7 @@ class MaintenanceEquipment(models.Model):
             self.measurement_ids = self.category_id.maintenance_measurement_line_ids
             self.transform_ids = self.category_id.maintenance_transform_line_ids
             self.metric_ids = self.category_id.maintenance_metric_line_ids
-            self.sitewise_model_id = self.category_id.sitewise_model_id
+            # self.sitewise_model_id = self.category_id.sitewise_model_id
             # Mapping additional fields from category to equipment
             self.owner_user_id = self.category_id.owner_user_id
             self.maintenance_team_id = self.category_id.maintenance_team_id
@@ -56,7 +56,7 @@ class MaintenanceEquipment(models.Model):
             self.measurement_ids = [(5, 0, 0)]
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
-            self.sitewise_model_id = False
+            # self.sitewise_model_id = False
         _logger.debug("Exiting onchange_data function")
 
     # Establishing connection to AWS
