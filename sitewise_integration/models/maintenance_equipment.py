@@ -56,8 +56,15 @@ class MaintenanceEquipment(models.Model):
             self.measurement_ids = [(5, 0, 0)]
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
+            self.sitewise_model_id = False
         _logger.debug("Exiting onchange_data function")
 
+    def write(self, vals):
+        """
+        Override write method to ensure sitewise_model_id is saved properly if it's set during onchange
+        """
+        res = super(MaintenanceEquipment, self).write(vals)
+        return res
 
     # Establishing connection to AWS
     def get_aws_client(self, service_name):
