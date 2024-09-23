@@ -43,7 +43,7 @@ class MaintenanceEquipment(models.Model):
             self.partner_ref = self.category_id.partner_ref
             self.model = self.category_id.model
             self.serial_no = self.category_id.serial_no
-            self.effective_dates = self.category_id.effective_dates
+            self.effective_date = self.category_id.effective_dates
             self.cost = self.category_id.cost
             self.warranty_date = self.category_id.warranty_date
             self.expected_mtbf = self.category_id.expected_mtbf
