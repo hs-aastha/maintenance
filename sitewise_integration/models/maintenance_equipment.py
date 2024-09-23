@@ -38,7 +38,7 @@ class MaintenanceEquipment(models.Model):
             self.assign_date = self.category_id.assign_date
             self.scrap_date = self.category_id.scrap_date
             self.location = self.category_id.location
-            self.note_comment = self.category_id.note_comment
+            self.note = self.category_id.note_comment
             self.partner_id = self.category_id.partner_id
             self.partner_ref = self.category_id.partner_ref
             self.model = self.category_id.model
