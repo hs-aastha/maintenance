@@ -17,7 +17,7 @@ class MaintenanceEquipment(models.Model):
     metric_ids = fields.One2many('maintenance.metric.line', 'equipment_id', string='Metrics')
     # Fields added for IDs fetched from SiteWise
     sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=True, store=True)
-    sitewise_asset_id = fields.Char(string='SiteWise Asset ID')
+    sitewise_asset_id = fields.Char(string='SiteWise Asset ID', readonly=True,)
     # Fields added for equipment hierarchy
     parent_id = fields.Many2one('maintenance.equipment', string='Parent Equipment')
     child_ids = fields.One2many('maintenance.equipment', 'parent_id', string='Child Equipments')
@@ -31,12 +31,33 @@ class MaintenanceEquipment(models.Model):
             self.transform_ids = self.category_id.maintenance_transform_line_ids
             self.metric_ids = self.category_id.maintenance_metric_line_ids
             self.sitewise_model_id = self.category_id.sitewise_model_id
+            # Mapping additional fields from category to equipment
+            self.owner_user_id = self.category_id.owner_user_id
+            self.maintenance_team_id = self.category_id.maintenance_team_id
+            self.technician_user_id = self.category_id.technician_user_id
+            self.assign_date = self.category_id.assign_date
+            self.scrap_date = self.category_id.scrap_date
+            self.location = self.category_id.location
+            self.note_comment = self.category_id.note_comment
+            self.partner_id = self.category_id.partner_id
+            self.partner_ref = self.category_id.partner_ref
+            self.model = self.category_id.model
+            self.serial_no = self.category_id.serial_no
+            self.effective_dates = self.category_id.effective_dates
+            self.cost = self.category_id.cost
+            self.warranty_date = self.category_id.warranty_date
+            self.expected_mtbf = self.category_id.expected_mtbf
+            self.mtbf = self.category_id.mtbf
+            self.estimated_next_failure = self.category_id.estimated_next_failure
+            self.latest_failure_date = self.category_id.latest_failure_date
+            self.mttr = self.category_id.mttr
         else:
             self.attribute_ids = [(5, 0, 0)]
             self.measurement_ids = [(5, 0, 0)]
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
         _logger.debug("Exiting onchange_data function")
+
 
     # Establishing connection to AWS
     def get_aws_client(self, service_name):
@@ -106,7 +127,7 @@ class MaintenanceEquipment(models.Model):
                     return True
                 elif status in ('FAILED', 'DELETING'):
                     raise ValidationError(f"Asset '{asset_id}' is in '{status}' state, which is not valid for operations.")
-                
+
                 time.sleep(interval)
                 elapsed_time += interval
             except Exception as e:
@@ -145,12 +166,12 @@ class MaintenanceEquipment(models.Model):
                 # Wait for the child asset to be ACTIVE
                 if not self.wait_for_asset_active(child.sitewise_asset_id):
                     raise ValidationError(f"Child asset '{child.name}' is not in ACTIVE state and cannot be associated.")
-                
+
                 hierarchy_id = self.category_id.sitewise_hierarchy_id
                 if not hierarchy_id:
                     _logger.error(f"Hierarchy ID not set for category {self.category_id.name} while associating child asset '{child.name}' to parent asset '{self.name}'")
                     raise ValidationError("Hierarchy ID not set for the selected equipment category '{self.category_id.name}'.")
-                
+
                 try:
                     # Log the Hierarchy ID being used
                     _logger.info(f"Associating child asset '{child.name}' using Hierarchy ID: {self.category_id.sitewise_hierarchy_id}")
@@ -158,14 +179,14 @@ class MaintenanceEquipment(models.Model):
                         assetId=self.sitewise_asset_id,  # Parent asset ID
                         childAssetId=child.sitewise_asset_id,
                         hierarchyId=self.category_id.sitewise_hierarchy_id  # The hierarchy ID of the model
-                        
+
                     )
                 except client.exceptions.ResourceNotFoundException:
                     raise ValidationError(f"Child asset '{child.name}' not found in AWS IoT SiteWise.")
                 except Exception as e:
                     _logger.error(f"Failed to associate child asset '{child.name}': {str(e)}")
                     raise ValidationError(f"Failed to associate child asset '{child.name}': {str(e)}")
-                
+
         _logger.debug("Exiting configure_sitewise_asset function")
 
     def button_create_asset(self):
