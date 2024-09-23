@@ -11,7 +11,7 @@ class MaintenanceEquipmentCategory(models.Model):
     _inherit = 'maintenance.equipment.category'
 
     # Fields added for IDs fetched from Sitewise
-    sitewise_model_id = fields.Char(string='SiteWise Model ID')
+    sitewise_model_id = fields.Char(string='SiteWise Model ID', readonly=True)
     # New field for hierarchy ID
     sitewise_hierarchy_id = fields.Char(string='SiteWise Hierarchy ID', readonly=True)
 
@@ -64,7 +64,7 @@ class MaintenanceEquipmentCategory(models.Model):
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key
         )
-    
+
     def wait_for_model_active(self, asset_model_id, timeout=300, interval=5):
         """
         Wait for the asset model to become ACTIVE.
@@ -76,7 +76,7 @@ class MaintenanceEquipmentCategory(models.Model):
         while elapsed_time < timeout:
             try:
                 response = client.describe_asset_model(assetModelId=asset_model_id)
-                # New logging statement for full response   
+                # New logging statement for full response
                 _logger.debug(f"Full response from describe_asset_model: {response}")
                 status = response.get('assetModelStatus', {}).get('state', '')
                 _logger.debug(f"Model {asset_model_id} status: {status}")
@@ -86,7 +86,7 @@ class MaintenanceEquipmentCategory(models.Model):
                     return response
                 elif status in ('FAILED', 'DELETING'):
                     raise ValidationError(f"Asset model '{asset_model_id}' is in '{status}' state and cannot be used.")
-                
+
                 time.sleep(interval)
                 elapsed_time += interval
             except Exception as e:
@@ -112,7 +112,7 @@ class MaintenanceEquipmentCategory(models.Model):
                     "attribute": {
                         "defaultValue": attr_line.default_value or ""
                     }
-                }   
+                }
             }
             # Add externalId field if it exists
             if attr_line.external_id:
