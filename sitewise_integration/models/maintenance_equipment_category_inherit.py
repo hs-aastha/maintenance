@@ -285,7 +285,7 @@ class MaintenanceEquipmentCategory(models.Model):
 
     def create_property(self, name, data_type, default_value="", external_id=None):
         """Helper to create a generic property."""
-        if isinstance(default_value, (datetime.date, datetime.datetime)):
+        if isinstance(default_value, (date, datetime)):
             default_value = default_value.strftime("%Y-%m-%d")  # Format date as a string
         elif isinstance(default_value, float):
             default_value = str(default_value)  # Convert float to string
