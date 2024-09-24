@@ -3,7 +3,7 @@ from odoo import models, fields, api
 import logging
 import boto3
 import time
-from datetime import datetime
+from datetime import datetime, date
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
 
