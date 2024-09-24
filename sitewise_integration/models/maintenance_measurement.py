@@ -42,6 +42,6 @@ class MaintenanceMeasurementLine(models.Model):
             self.external_id = self.name.external_id
         else:
             # Clear fields if no name is selected
-            self.default_value = False
+            self.unit = False
             self.data_type = False
             self.external_id = False
