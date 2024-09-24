@@ -9,7 +9,7 @@
                 <!-- Corrected XPath to add buttons to the header -->
                 <xpath expr="//form//sheet" position="before">
                     <header>
-                        <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary" invisible="not sitewise_model_id"/>
+                        <button name="button_create_asset" type="object" string="Create Asset" class="btn-primary" invisible="sitewise_asset_id"/>
                     </header>
                 </xpath>
                 <!-- Add new tabs in the notebook -->
@@ -61,8 +61,8 @@
                 </xpath>
                 <!-- Add fields to display the AWS IDs -->
                 <xpath expr="//sheet/group/group" position="inside">
-                    <field name="sitewise_model_id" groups="base.group_no_one"/>
-                    <field name="sitewise_asset_id" groups="base.group_no_one"/>
+                    <field name="sitewise_model_id"/>
+                    <field name="sitewise_asset_id"/>
                     <!-- Added fields for equipment hierarchy -->
                     <field name="parent_id"/>
                     <field name="child_ids" widget="many2many_tags"/>
