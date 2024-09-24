@@ -7,12 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//form//sheet" position="before">
                 <header>
-                    <button name="button_create_model" type="object" string="Create Model" class="btn-primary" invisible="not sitewise_model_id"/>
+                    <button name="button_create_model" type="object" string="Create Model" class="btn-primary" invisible="sitewise_model_id"/>
                 </header>
             </xpath>
-<!--            <xpath expr="//field[@name='note']" position="after">-->
-<!--                <field name="sitewise_model_id"/>-->
-<!--            </xpath>-->
             <xpath expr="//field[@name='technician_user_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
