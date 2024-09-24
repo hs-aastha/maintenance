@@ -201,16 +201,37 @@ class MaintenanceEquipmentCategory(models.Model):
             asset_model_properties.append(property_dict)
         # Include technician_user_id in the asset model properties
         if self.technician_user_id:
-            property_dict = {
-                "name": "Technician",
-                "dataType": "STRING",  # Assuming 'technician_user_id' is related to a name or user ID as a string
-                "type": {
-                    "attribute": {
-                        "defaultValue": self.technician_user_id.name
-                    }
-                }
-            }
-            asset_model_properties.append(property_dict)
+            asset_model_properties.append(self.create_property("Technician", "STRING", default_value=self.technician_user_id.name))
+        if self.owner_user_id:
+            asset_model_properties.append(self.create_property("Owner", "STRING", default_value=self.owner_user_id.name))
+        if self.maintenance_team_id:
+            asset_model_properties.append(self.create_property("Maintenance Team", "STRING", default_value=self.maintenance_team_id.name))
+        if self.assign_date:
+            asset_model_properties.append(self.create_property("Assigned Date", "STRING", default_value=self.assign_date))
+        if self.scrap_date:
+            asset_model_properties.append(self.create_property("Scrap Date", "STRING", default_value=self.scrap_date))
+        if self.location:
+            asset_model_properties.append(self.create_property("Location", "STRING", default_value=self.location))
+        if self.note:
+            asset_model_properties.append(self.create_property("Comment", "STRING", default_value=self.note))
+        if self.partner_id:
+            asset_model_properties.append(self.create_property("Vendor", "STRING", default_value=self.partner_id.name))
+        if self.partner_ref:
+            asset_model_properties.append(self.create_property("Vendor Reference", "STRING", default_value=self.partner_ref.name))
+        if self.model:
+            asset_model_properties.append(self.create_property("Model", "STRING", default_value=self.model))
+        if self.serial_no:
+            asset_model_properties.append(self.create_property("Serial Number", "STRING", default_value=self.serial_no))
+        if self.serial_no:
+            asset_model_properties.append(self.create_property("Serial Number", "STRING", default_value=self.serial_no))
+        if self.effective_dates:
+            asset_model_properties.append(self.create_property("Effective Date", "STRING", default_value=self.effective_dates))
+        if self.cost:
+            asset_model_properties.append(self.create_property("Cost", "DOUBLE", default_value=self.cost))
+        if self.warranty_date:
+            asset_model_properties.append(self.create_property("Warranty Expiration Date", "STRING", default_value=self.warranty_date))
+        if self.alias_name:
+            asset_model_properties.append(self.create_property("Email Alias", "STRING", default_value=self.alias_name))
         # Prepare hierarchy information
         if not self.child_ids:
             _logger.info(f"No child categories found for {self.name}. Proceeding without hierarchies.")
@@ -261,6 +282,21 @@ class MaintenanceEquipmentCategory(models.Model):
         except Exception as e:
             _logger.error(f"Error creating SiteWise model: {str(e)}")
             raise ValidationError(f"Error creating SiteWise model: {str(e)}")
+
+    def create_property(self, name, data_type, default_value="", external_id=None):
+        """Helper to create a generic property."""
+        property_dict = {
+            "name": name,
+            "dataType": data_type,
+            "type": {
+                "attribute": {
+                    "defaultValue": default_value
+                }
+            }
+        }
+        if external_id:
+            property_dict["externalId"] = external_id
+        return property_dict
 
     def button_create_model(self):
         _logger.debug("Entering button_create_model function")
