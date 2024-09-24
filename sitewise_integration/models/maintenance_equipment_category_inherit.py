@@ -3,7 +3,7 @@ from odoo import models, fields, api
 import logging
 import boto3
 import time
-
+from datetime import datetime
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
 
@@ -285,6 +285,10 @@ class MaintenanceEquipmentCategory(models.Model):
 
     def create_property(self, name, data_type, default_value="", external_id=None):
         """Helper to create a generic property."""
+        if isinstance(default_value, (datetime.date, datetime.datetime)):
+            default_value = default_value.strftime("%Y-%m-%d")  # Format date as a string
+        elif isinstance(default_value, float):
+            default_value = str(default_value)  # Convert float to string
         property_dict = {
             "name": name,
             "dataType": data_type,
