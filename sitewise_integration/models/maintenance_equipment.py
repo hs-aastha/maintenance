@@ -20,7 +20,7 @@ class MaintenanceEquipment(models.Model):
     sitewise_model_id = fields.Char(string='SiteWise Model ID', related='category_id.sitewise_model_id', readonly=True, store=True)
     sitewise_asset_id = fields.Char(string='SiteWise Asset ID', readonly=True,)
     # Fields added for equipment hierarchy
-    # parent_id = fields.Many2one('maintenance.equipment', string='Parent Equipment')
+    parent_id = fields.Many2one('maintenance.equipment', string='Parent Equipment')
     child_ids = fields.One2many('maintenance.equipment', 'parent_id', string='Child Equipments')
 
     @api.onchange('category_id')

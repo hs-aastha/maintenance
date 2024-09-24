@@ -16,7 +16,7 @@ class MaintenanceEquipmentCategory(models.Model):
     sitewise_hierarchy_id = fields.Char(string='SiteWise Hierarchy ID', readonly=True)
 
     # Fields added for equipment category hierarchy
-    # parent_id = fields.Many2one('maintenance.equipment.category', string='Parent Category')
+    parent_id = fields.Many2one('maintenance.equipment.category', string='Parent Category')
     child_ids = fields.One2many('maintenance.equipment.category', 'parent_id', string='Child Categories')
 
     # Additional fields required for Sitewise integration
