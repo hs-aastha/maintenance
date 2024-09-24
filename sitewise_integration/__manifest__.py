@@ -8,6 +8,7 @@
     'website': 'https://www.hundredsolutions.com/',
     'category': 'Maintenance',
     'depends': [
+        'base',
         'maintenance',
     ],
     'external_dependencies': {
