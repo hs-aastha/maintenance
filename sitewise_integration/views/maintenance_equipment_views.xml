@@ -64,7 +64,7 @@
                     <field name="sitewise_model_id"/>
                     <field name="sitewise_asset_id"/>
                     <!-- Added fields for equipment hierarchy -->
-                    <field name="parent_id"/>
+<!--                    <field name="parent_id"/>-->
                     <field name="child_ids" widget="many2many_tags"/>
                 </xpath>
             </field>
