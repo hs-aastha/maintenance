@@ -222,8 +222,6 @@ class MaintenanceEquipmentCategory(models.Model):
             asset_model_properties.append(self.create_property("Model", "STRING", default_value=self.model))
         if self.serial_no:
             asset_model_properties.append(self.create_property("Serial Number", "STRING", default_value=self.serial_no))
-        if self.serial_no:
-            asset_model_properties.append(self.create_property("Serial Number", "STRING", default_value=self.serial_no))
         if self.effective_dates:
             asset_model_properties.append(self.create_property("Effective Date", "STRING", default_value=self.effective_dates))
         if self.cost:
