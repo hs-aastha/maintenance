@@ -3,7 +3,8 @@ from odoo import models, fields, api
 import logging
 from odoo.exceptions import ValidationError
 import time
-
+import re
+from html import unescape
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
 
@@ -51,6 +52,15 @@ class MaintenanceEquipment(models.Model):
             self.estimated_next_failure = self.category_id.estimated_next_failure
             self.latest_failure_date = self.category_id.latest_failure_date
             self.mttr = self.category_id.mttr
+            # Load the child equipment based on the child categories of the selected category
+            child_categories = self.category_id.child_ids
+            if child_categories:
+                # Fetch the equipment associated with child categories and map to child_ids
+                child_equipments = self.env['maintenance.equipment'].search(
+                    [('category_id', 'in', child_categories.ids)])
+                self.child_ids = child_equipments
+            else:
+                self.child_ids = [(5, 0, 0)]  # Clear child_ids if no child categories
         else:
             self.attribute_ids = [(5, 0, 0)]
             self.measurement_ids = [(5, 0, 0)]
@@ -80,14 +90,21 @@ class MaintenanceEquipment(models.Model):
             aws_secret_access_key=aws_secret_access_key
         )
 
+    def _clean_html(self, html_text):
+        """Helper method to remove HTML tags and unescape HTML entities."""
+        # Remove HTML tags using a regex and then unescape HTML entities
+        return unescape(re.sub('<.*?>', '', html_text))
+
     def create_sitewise_asset(self):
         _logger.debug("Entering create_sitewise_asset function")
         client = self.get_aws_client('iotsitewise')
-
+        # Clean the 'note' field by removing HTML tags and unescaping HTML entities
+        asset_description = self._clean_html(self.note) if self.note else ""
         asset_payload = {
             "assetName": self.name,
             "assetModelId": self.category_id.sitewise_model_id,  # Use the actual asset model ID
-            "assetDescription": self.note,
+            "assetDescription": asset_description,
+            # "assetDescription": self.note,
         }
 
         _logger.debug(f"Calling AWS API to create asset with payload: {asset_payload}")

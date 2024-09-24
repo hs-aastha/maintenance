@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form//sheet" position="before">
                 <header>
-                    <button name="button_create_model" type="object" string="Create Model" class="btn-primary"/>
+                    <button name="button_create_model" type="object" string="Create Model" class="btn-primary" invisible="not sitewise_model_id"/>
                 </header>
             </xpath>
 <!--            <xpath expr="//field[@name='note']" position="after">-->
@@ -50,7 +50,7 @@
                         <field name="location"/>
                         <field name="sitewise_model_id"/>
                         <!-- Added field to show hierarchy ID -->
-                        <field name="sitewise_hierarchy_id"/>
+                        <field name="sitewise_hierarchy_id" groups="base.group_no_one"/>
                         <!-- Add hierarchy fields for parent and child categories -->
                         <field name="parent_id"/>
                         <field name="child_ids" widget="many2many_tags"/>
