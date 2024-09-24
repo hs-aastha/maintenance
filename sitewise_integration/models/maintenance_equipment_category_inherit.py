@@ -199,7 +199,18 @@ class MaintenanceEquipmentCategory(models.Model):
             if metric_line.external_id:
                 property_dict["externalId"] = metric_line.external_id
             asset_model_properties.append(property_dict)
-
+        # Include technician_user_id in the asset model properties
+        if self.technician_user_id:
+            property_dict = {
+                "name": "Technician",
+                "dataType": "STRING",  # Assuming 'technician_user_id' is related to a name or user ID as a string
+                "type": {
+                    "attribute": {
+                        "defaultValue": self.technician_user_id.name
+                    }
+                }
+            }
+            asset_model_properties.append(property_dict)
         # Prepare hierarchy information
         if not self.child_ids:
             _logger.info(f"No child categories found for {self.name}. Proceeding without hierarchies.")
