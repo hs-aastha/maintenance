@@ -217,7 +217,7 @@ class MaintenanceEquipmentCategory(models.Model):
         if self.partner_id:
             asset_model_properties.append(self.create_property("Vendor", "STRING", default_value=self.partner_id.name))
         if self.partner_ref:
-            asset_model_properties.append(self.create_property("Vendor Reference", "STRING", default_value=self.partner_ref.name))
+            asset_model_properties.append(self.create_property("Vendor Reference", "STRING", default_value=self.partner_ref))
         if self.model:
             asset_model_properties.append(self.create_property("Model", "STRING", default_value=self.model))
         if self.serial_no:
