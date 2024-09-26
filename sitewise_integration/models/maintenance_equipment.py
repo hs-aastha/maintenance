@@ -67,7 +67,8 @@ class MaintenanceEquipment(models.Model):
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
             self.child_ids = [(5, 0, 0)]
-        _logger.debug("Exiting onchange_data function")
+        if not self.category_id or not self.category_id.child_ids:
+            self.child_ids = [(5, 0, 0)]
 
     # Establishing connection to AWS
     def get_aws_client(self, service_name):
