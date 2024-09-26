@@ -32,13 +32,13 @@ class MaintenanceEquipment(models.Model):
                     # Fetch equipment associated with child categories
                     child_equipments = self.env['maintenance.equipment'].search(
                         [('category_id', 'in', child_categories.ids)])
-                    equipment.child_ids = child_equipments
+                    equipment.child_ids = [(6, 0, child_equipments.ids)]  # Set child_ids properly
                 else:
                     # Clear child_ids if no child categories exist
-                    equipment.child_ids = [(5, 0, 0)]
+                    equipment.child_ids = [(5, 0, 0)]  # Remove any child equipment
             else:
                 # Clear child_ids if no category is selected
-                equipment.child_ids = [(5, 0, 0)]
+                equipment.child_ids = [(5, 0, 0)]  # Remove all children
 
     @api.onchange('category_id')
     def onchange_data(self):
