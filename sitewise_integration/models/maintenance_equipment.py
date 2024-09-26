@@ -27,17 +27,9 @@ class MaintenanceEquipment(models.Model):
     def _compute_child_ids(self):
         for equipment in self:
             if equipment.category_id and equipment.category_id.child_ids:
-                # Get child categories
-                child_categories = equipment.category_id.child_ids
-                # Search for equipment related to those child categories
-                child_equipments = self.env['maintenance.equipment'].search(
-                    [('category_id', 'in', child_categories.ids)])
-                # Set the child_ids field if child equipment exists
-                if child_equipments:
-                    equipment.child_ids = [(6, 0, child_equipments.ids)]
-                else:
-                    # No child equipment found, leave the field empty
-                    equipment.child_ids = [(5, 0, 0)]
+                equipment.child_ids = equipment.category_id.child_ids
+            elif not equipment.category_id.child_ids:
+                equipment.child_ids = None
             else:
                 # No child categories found, clear the field
                 equipment.child_ids = [(5, 0, 0)]
