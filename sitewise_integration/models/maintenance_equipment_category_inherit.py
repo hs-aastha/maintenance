@@ -169,7 +169,7 @@ class MaintenanceEquipmentCategory(models.Model):
                                                "propertyId": "string",
                                                "propertyPath": [
                                                    {
-                                                       "id": "string",
+                                                       # "id": "string",
                                                        "name": "string"
                                                    }
                                                ]
