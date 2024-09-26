@@ -66,7 +66,7 @@ class MaintenanceEquipment(models.Model):
             self.measurement_ids = [(5, 0, 0)]
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
-            # self.sitewise_model_id = False
+            self.child_ids = [(5, 0, 0)]
         _logger.debug("Exiting onchange_data function")
 
     # Establishing connection to AWS

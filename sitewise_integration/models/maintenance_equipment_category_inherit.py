@@ -213,7 +213,7 @@ class MaintenanceEquipmentCategory(models.Model):
         if self.location:
             asset_model_properties.append(self.create_property("Location", "STRING", default_value=self.location))
         if self.note:
-            asset_model_properties.append(self.create_property("Comment", "STRING", default_value=self.note))
+            asset_model_properties.append(self.create_property("Comments", "STRING", default_value=self.note))
         if self.partner_id:
             asset_model_properties.append(self.create_property("Vendor", "STRING", default_value=self.partner_id.name))
         if self.partner_ref:
@@ -248,7 +248,7 @@ class MaintenanceEquipmentCategory(models.Model):
         # Create the full payload for creating the SiteWise model
         asset_model_payload = {
             "assetModelName": self.name,
-            "assetModelDescription": self.note or ' ',
+            "assetModelDescription": self.note_comment or ' ',
             "assetModelProperties": asset_model_properties,
             "assetModelHierarchies": asset_model_hierarchies,
         }
