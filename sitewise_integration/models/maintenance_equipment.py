@@ -23,17 +23,6 @@ class MaintenanceEquipment(models.Model):
     parent_id = fields.Many2one('maintenance.equipment', string='Parent Equipment')
     child_ids = fields.One2many('maintenance.equipment', 'parent_id', string='Child Equipments')
 
-    @api.depends('category_id')
-    def _compute_child_ids(self):
-        for equipment in self:
-            if equipment.category_id and equipment.category_id.child_ids:
-                equipment.child_ids = equipment.category_id.child_ids
-            elif not equipment.category_id.child_ids:
-                equipment.child_ids = None
-            else:
-                # No child categories found, clear the field
-                equipment.child_ids = [(5, 0, 0)]
-
     @api.onchange('category_id')
     def onchange_data(self):
         _logger.debug("Entering onchange_data function for equipment with category ID: %s", self.category_id.id if self.category_id else 'None')
@@ -64,20 +53,20 @@ class MaintenanceEquipment(models.Model):
             self.latest_failure_date = self.category_id.latest_failure_date
             self.mttr = self.category_id.mttr
             # Load the child equipment based on the child categories of the selected category
-            # child_categories = self.category_id.child_ids
-            # if child_categories:
-            #     # Fetch the equipment associated with child categories and map to child_ids
-            #     child_equipments = self.env['maintenance.equipment'].search(
-            #         [('category_id', 'in', child_categories.ids)])
-            #     self.child_ids = child_equipments
-            # else:
-            #     self.child_ids = [(5, 0, 0)]  # Clear child_ids if no child categories
+            child_categories = self.category_id.child_ids
+            if child_categories:
+                # Fetch the equipment associated with child categories and map to child_ids
+                child_equipments = self.env['maintenance.equipment'].search(
+                    [('category_id', 'in', child_categories.ids)])
+                self.child_ids = child_equipments
+            else:
+                self.child_ids = [(5, 0, 0)]  # Clear child_ids if no child categories
         else:
             self.attribute_ids = [(5, 0, 0)]
             self.measurement_ids = [(5, 0, 0)]
             self.transform_ids = [(5, 0, 0)]
             self.metric_ids = [(5, 0, 0)]
-            # self.child_ids = [(5, 0, 0)]
+            self.child_ids = [(5, 0, 0)]
 
     # Establishing connection to AWS
     def get_aws_client(self, service_name):
