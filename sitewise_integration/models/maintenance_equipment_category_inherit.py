@@ -164,7 +164,10 @@ class MaintenanceEquipmentCategory(models.Model):
                         "variables": [{"name": "variable_name_1",
                                        "value": {
                                            "type": "STRING",  # Specify the type of the value
-                                           "value": "test value"  # Replace with the appropriate value structure
+                                           "value": {
+                                               "hierarchyId": "string",
+                                               "propertyId": "string",
+                                           }  # Replace with the appropriate value structure
                                        }
                                        }]  # Update as needed
                     }
