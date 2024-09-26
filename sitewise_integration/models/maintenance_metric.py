@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields,api
 
 
 class MaintenanceMetric(models.Model):
@@ -47,3 +47,24 @@ class MaintenanceMetricLine(models.Model):
     custom_interval = fields.Char('Custom Interval')
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment')
     maintenance_metric_line_id = fields.Many2one('maintenance.equipment.category', string='Equipment metric')
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        """Automatically fill in the other fields based on the selected 'name'"""
+        if self.name:
+            self.unit = self.name.unit
+            self.data_type = self.name.data_type
+            self.external_id = self.name.external_id
+            self.formula = self.name.formula
+            self.time_interval = self.name.time_interval
+            self.custom_interval = fields.custom_interval
+        else:
+            # Clear fields if no name is selected
+            self.unit = False
+            self.data_type = False
+            self.external_id = False
+            self.formula = False
+            self.time_interval = False
+            self.custom_interval = False
+
+
