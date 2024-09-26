@@ -26,19 +26,21 @@ class MaintenanceEquipment(models.Model):
     @api.depends('category_id')
     def _compute_child_ids(self):
         for equipment in self:
-            if equipment.category_id:
+            if equipment.category_id and equipment.category_id.child_ids:
+                # Get child categories
                 child_categories = equipment.category_id.child_ids
-                if child_categories:
-                    # Fetch equipment associated with child categories
-                    child_equipments = self.env['maintenance.equipment'].search(
-                        [('category_id', 'in', child_categories.ids)])
-                    equipment.child_ids = [(6, 0, child_equipments.ids)]  # Set child_ids properly
+                # Search for equipment related to those child categories
+                child_equipments = self.env['maintenance.equipment'].search(
+                    [('category_id', 'in', child_categories.ids)])
+                # Set the child_ids field if child equipment exists
+                if child_equipments:
+                    equipment.child_ids = [(6, 0, child_equipments.ids)]
                 else:
-                    # Clear child_ids if no child categories exist
-                    equipment.child_ids = [(5, 0, 0)]  # Remove any child equipment
+                    # No child equipment found, leave the field empty
+                    equipment.child_ids = [(5, 0, 0)]
             else:
-                # Clear child_ids if no category is selected
-                equipment.child_ids = [(5, 0, 0)]  # Remove all children
+                # No child categories found, clear the field
+                equipment.child_ids = [(5, 0, 0)]
 
     @api.onchange('category_id')
     def onchange_data(self):
