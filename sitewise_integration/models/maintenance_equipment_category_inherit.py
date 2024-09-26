@@ -161,7 +161,7 @@ class MaintenanceEquipmentCategory(models.Model):
                                 "state": "DISABLED"  # Default state; adjust as needed
                             }
                         },
-                        "variables": [{"name": "variable_name_1"}]  # Update as needed
+                        "variables": [{"name": "variable_name_1", "value": "test value"}]  # Update as needed
                     }
                 }
             }
