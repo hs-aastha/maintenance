@@ -167,6 +167,12 @@ class MaintenanceEquipmentCategory(models.Model):
                                            "value": {
                                                "hierarchyId": "string",
                                                "propertyId": "string",
+                                               "propertyPath": [
+                                                   {
+                                                       "id": "string",
+                                                       "name": "string"
+                                                   }
+                                               ]
                                            }  # Replace with the appropriate value structure
                                        }
                                        }]  # Update as needed
