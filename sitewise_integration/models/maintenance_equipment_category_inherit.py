@@ -4,8 +4,10 @@ import logging
 import boto3
 import time
 from datetime import datetime, date
+
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
+
 
 class MaintenanceEquipmentCategory(models.Model):
     _inherit = 'maintenance.equipment.category'
@@ -20,10 +22,14 @@ class MaintenanceEquipmentCategory(models.Model):
     child_ids = fields.One2many('maintenance.equipment.category', 'parent_id', string='Child Categories')
 
     # Additional fields required for Sitewise integration
-    maintenance_attribute_line_ids = fields.One2many('maintenance.attribute.line', 'maintenance_attribute_line_id', string='Attributes')
-    maintenance_measurement_line_ids = fields.One2many('maintenance.measurement.line', 'maintenance_measurement_line_id', string='Measurements')
-    maintenance_transform_line_ids = fields.One2many('maintenance.transform.line', 'maintenance_transform_line_id', string='Transforms')
-    maintenance_metric_line_ids = fields.One2many('maintenance.metric.line', 'maintenance_metric_line_id', string='Metrics')
+    maintenance_attribute_line_ids = fields.One2many('maintenance.attribute.line', 'maintenance_attribute_line_id',
+                                                     string='Attributes')
+    maintenance_measurement_line_ids = fields.One2many('maintenance.measurement.line',
+                                                       'maintenance_measurement_line_id', string='Measurements')
+    maintenance_transform_line_ids = fields.One2many('maintenance.transform.line', 'maintenance_transform_line_id',
+                                                     string='Transforms')
+    maintenance_metric_line_ids = fields.One2many('maintenance.metric.line', 'maintenance_metric_line_id',
+                                                  string='Metrics')
 
     # Add fields same as equipment
     owner_user_id = fields.Many2one('res.users', string="Owner")
@@ -49,7 +55,8 @@ class MaintenanceEquipmentCategory(models.Model):
     def get_aws_client(self, service_name):
         _logger.debug("Entering get_aws_client function")
         aws_access_key_id = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_access_key_id')
-        aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_secret_access_key')
+        aws_secret_access_key = self.env['ir.config_parameter'].sudo().get_param(
+            'sitewise_integration.aws_secret_access_key')
         aws_region = self.env['ir.config_parameter'].sudo().get_param('sitewise_integration.aws_region')
 
         # Add logging to check parameter values
@@ -161,21 +168,14 @@ class MaintenanceEquipmentCategory(models.Model):
                                 "state": "DISABLED"  # Default state; adjust as needed
                             }
                         },
-                        "variables": [{"name": "torque",
-                                       "value": {
-                                           "type": "STRING",  # Specify the type of the value
-                                           "value": {
-                                               # "hierarchyId": "string",
-                                               "propertyId": "Torque (KiloNewton Meter)"
-                                               # "propertyPath": [
-                                               #     {
-                                               #         # "id": "string",
-                                               #         "name": "string"
-                                               #     }
-                                               # ]
-                                           }  # Replace with the appropriate value structure
-                                       }
-                                       }]  # Update as needed
+                        "variables": [
+                            {
+                                "name": "torque",
+                                "value": {
+                                    "propertyId": "Torque (KiloNewton Meter)"  # Reference the correct propertyId here
+                                }
+                            }
+                        ]
                     }
                 }
             }
@@ -215,13 +215,17 @@ class MaintenanceEquipmentCategory(models.Model):
             asset_model_properties.append(property_dict)
         # Include technician_user_id in the asset model properties
         if self.technician_user_id:
-            asset_model_properties.append(self.create_property("Technician", "STRING", default_value=self.technician_user_id.name))
+            asset_model_properties.append(
+                self.create_property("Technician", "STRING", default_value=self.technician_user_id.name))
         if self.owner_user_id:
-            asset_model_properties.append(self.create_property("Owner", "STRING", default_value=self.owner_user_id.name))
+            asset_model_properties.append(
+                self.create_property("Owner", "STRING", default_value=self.owner_user_id.name))
         if self.maintenance_team_id:
-            asset_model_properties.append(self.create_property("Maintenance Team", "STRING", default_value=self.maintenance_team_id.name))
+            asset_model_properties.append(
+                self.create_property("Maintenance Team", "STRING", default_value=self.maintenance_team_id.name))
         if self.assign_date:
-            asset_model_properties.append(self.create_property("Assigned Date", "STRING", default_value=self.assign_date))
+            asset_model_properties.append(
+                self.create_property("Assigned Date", "STRING", default_value=self.assign_date))
         if self.scrap_date:
             asset_model_properties.append(self.create_property("Scrap Date", "STRING", default_value=self.scrap_date))
         if self.location:
@@ -231,17 +235,20 @@ class MaintenanceEquipmentCategory(models.Model):
         if self.partner_id:
             asset_model_properties.append(self.create_property("Vendor", "STRING", default_value=self.partner_id.name))
         if self.partner_ref:
-            asset_model_properties.append(self.create_property("Vendor Reference", "STRING", default_value=self.partner_ref))
+            asset_model_properties.append(
+                self.create_property("Vendor Reference", "STRING", default_value=self.partner_ref))
         if self.model:
             asset_model_properties.append(self.create_property("Model", "STRING", default_value=self.model))
         if self.serial_no:
             asset_model_properties.append(self.create_property("Serial Number", "STRING", default_value=self.serial_no))
         if self.effective_dates:
-            asset_model_properties.append(self.create_property("Effective Date", "STRING", default_value=self.effective_dates))
+            asset_model_properties.append(
+                self.create_property("Effective Date", "STRING", default_value=self.effective_dates))
         if self.cost:
             asset_model_properties.append(self.create_property("Cost", "DOUBLE", default_value=self.cost))
         if self.warranty_date:
-            asset_model_properties.append(self.create_property("Warranty Expiration Date", "STRING", default_value=self.warranty_date))
+            asset_model_properties.append(
+                self.create_property("Warranty Expiration Date", "STRING", default_value=self.warranty_date))
         if self.alias_name:
             asset_model_properties.append(self.create_property("Email Alias", "STRING", default_value=self.alias_name))
         # Prepare hierarchy information
@@ -309,7 +316,8 @@ class MaintenanceEquipmentCategory(models.Model):
                 _logger.debug("Exiting create_sitewise_model function")
                 return response
             except client.exceptions.ResourceAlreadyExistsException:
-                raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
+                raise ValidationError(
+                    f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
             except Exception as e:
                 _logger.error(f"Error creating SiteWise model: {str(e)}")
                 raise ValidationError(f"Error creating SiteWise model: {str(e)}")
@@ -340,4 +348,4 @@ class MaintenanceEquipmentCategory(models.Model):
             if response and 'assetModelId' in response:
                 record.sitewise_model_id = response['assetModelId']
         _logger.debug("Exiting button_create_model function")
-            # You can add further logic to handle the response if needed
+        # You can add further logic to handle the response if needed
