@@ -326,31 +326,31 @@ class MaintenanceEquipmentCategory(models.Model):
                 raise ValidationError(f"Error creating SiteWise model: {str(e)}")
 
 
-def create_property(self, name, data_type, default_value="", external_id=None):
-    """Helper to create a generic property."""
-    if isinstance(default_value, (date, datetime)):
-        default_value = default_value.strftime("%Y-%m-%d")  # Format date as a string
-    elif isinstance(default_value, float):
-        default_value = str(default_value)  # Convert float to string
-    property_dict = {
-        "name": name,
-        "dataType": data_type,
-        "type": {
-            "attribute": {
-                "defaultValue": default_value
+    def create_property(self, name, data_type, default_value="", external_id=None):
+        """Helper to create a generic property."""
+        if isinstance(default_value, (date, datetime)):
+            default_value = default_value.strftime("%Y-%m-%d")  # Format date as a string
+        elif isinstance(default_value, float):
+            default_value = str(default_value)  # Convert float to string
+        property_dict = {
+            "name": name,
+            "dataType": data_type,
+            "type": {
+                "attribute": {
+                    "defaultValue": default_value
+                }
             }
         }
-    }
-    if external_id:
-        property_dict["externalId"] = external_id
-    return property_dict
+        if external_id:
+            property_dict["externalId"] = external_id
+        return property_dict
 
 
-def button_create_model(self):
-    _logger.debug("Entering button_create_model function")
-    for record in self:
-        response = record.create_sitewise_model()
-        if response and 'assetModelId' in response:
-            record.sitewise_model_id = response['assetModelId']
-    _logger.debug("Exiting button_create_model function")
-    # You can add further logic to handle the response if needed
+    def button_create_model(self):
+        _logger.debug("Entering button_create_model function")
+        for record in self:
+            response = record.create_sitewise_model()
+            if response and 'assetModelId' in response:
+                record.sitewise_model_id = response['assetModelId']
+        _logger.debug("Exiting button_create_model function")
+        # You can add further logic to handle the response if needed
