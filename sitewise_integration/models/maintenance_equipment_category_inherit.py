@@ -161,18 +161,18 @@ class MaintenanceEquipmentCategory(models.Model):
                                 "state": "DISABLED"  # Default state; adjust as needed
                             }
                         },
-                        "variables": [{"name": "variable_name_1",
+                        "variables": [{"name": "torque",
                                        "value": {
                                            "type": "STRING",  # Specify the type of the value
                                            "value": {
-                                               "hierarchyId": "string",
-                                               "propertyId": "string",
-                                               "propertyPath": [
-                                                   {
-                                                       # "id": "string",
-                                                       "name": "string"
-                                                   }
-                                               ]
+                                               # "hierarchyId": "string",
+                                               "propertyId": "Torque (KiloNewton Meter)"
+                                               # "propertyPath": [
+                                               #     {
+                                               #         # "id": "string",
+                                               #         "name": "string"
+                                               #     }
+                                               # ]
                                            }  # Replace with the appropriate value structure
                                        }
                                        }]  # Update as needed
