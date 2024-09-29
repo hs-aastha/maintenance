@@ -8,7 +8,6 @@
             <xpath expr="//form//sheet" position="before">
                 <header>
                     <button name="button_create_model" type="object" string="Create Model" class="btn-primary" />
-                    <!--invisible="sitewise_model_id"-->
                 </header>
             </xpath>
             <xpath expr="//field[@name='technician_user_id']" position="attributes">
