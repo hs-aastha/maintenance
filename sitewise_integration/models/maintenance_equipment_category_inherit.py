@@ -287,9 +287,9 @@ class MaintenanceEquipmentCategory(models.Model):
             }
             try:
                 response = client.update_asset_model(**asset_model_payload)
-                _logger.debug(f"AWS response for model update: {response}")
-                model_details = self.wait_for_model_active(self.sitewise_model_id)
-                self.update_hierarchies(model_details)
+                # _logger.debug(f"AWS response for model update: {response}")
+                # model_details = self.wait_for_model_active(self.sitewise_model_id)
+                # self.update_hierarchies(model_details)
             except Exception as e:
                 _logger.error(f"Error updating SiteWise model: {str(e)}")
                 raise ValidationError(f"Error updating SiteWise model: {str(e)}")
