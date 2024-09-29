@@ -57,7 +57,7 @@ class MaintenanceMetricLine(models.Model):
             self.external_id = self.name.external_id
             self.formula = self.name.formula
             self.time_interval = self.name.time_interval
-            self.custom_interval = fields.custom_interval
+            self.custom_interval = self.custom_interval
         else:
             # Clear fields if no name is selected
             self.unit = False
