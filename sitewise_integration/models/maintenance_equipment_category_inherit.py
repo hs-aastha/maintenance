@@ -109,7 +109,6 @@ class MaintenanceEquipmentCategory(models.Model):
         asset_model_properties = []
         asset_model_hierarchies = []
         property_name_to_id = ''
-        transform_name = ''
         # Prepare asset model properties
         # Process maintenance_attribute_line_ids
         for attr_line in self.maintenance_attribute_line_ids:
@@ -184,7 +183,6 @@ class MaintenanceEquipmentCategory(models.Model):
             if transform_line.external_id:
                 property_dict["externalId"] = transform_line.external_id
             asset_model_properties.append(property_dict)
-            transform_name = transform_line.name.name
         # Process maintenance_metric_line_ids
         for metric_line in self.maintenance_metric_line_ids:
             if metric_line.data_type.upper() not in ['DOUBLE', 'STRING']:
@@ -204,7 +202,7 @@ class MaintenanceEquipmentCategory(models.Model):
                             {
                                 "name": "torque",
                                 "value": {
-                                    "propertyId": transform_name
+                                    "propertyId": property_name_to_id
                                 }
                             },
                         ],
