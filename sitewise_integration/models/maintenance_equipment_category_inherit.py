@@ -268,32 +268,51 @@ class MaintenanceEquipmentCategory(models.Model):
         }
 
         _logger.debug(f"Calling AWS API to create asset model with payload: {asset_model_payload}")
-        try:
-            # Send the payload to AWS SiteWise to create the asset model
-            response = client.create_asset_model(**asset_model_payload)
-            _logger.debug(f"AWS response for model creation: {response}")
-            self.sitewise_model_id = response['assetModelId']
+        # test code
+        if self.sitewise_model_id:
+            _logger.debug(f"Updating existing SiteWise model with ID: {self.sitewise_model_id}")
+            asset_model_payload = {
+                "assetModelId": self.sitewise_model_id,
+                "assetModelName": self.name,
+                "assetModelDescription": self.note_comment or ' ',
+                "assetModelProperties": asset_model_properties,
+                "assetModelHierarchies": asset_model_hierarchies,
+            }
+            try:
+                response = client.update_asset_model(**asset_model_payload)
+                _logger.debug(f"AWS response for model update: {response}")
+                model_details = self.wait_for_model_active(self.sitewise_model_id)
+                self.update_hierarchies(model_details)
+            except Exception as e:
+                _logger.error(f"Error updating SiteWise model: {str(e)}")
+                raise ValidationError(f"Error updating SiteWise model: {str(e)}")
+        else:
+            try:
+                # Send the payload to AWS SiteWise to create the asset model
+                response = client.create_asset_model(**asset_model_payload)
+                _logger.debug(f"AWS response for model creation: {response}")
+                self.sitewise_model_id = response['assetModelId']
 
-            # Wait for the model to become ACTIVE
-            model_details = self.wait_for_model_active(self.sitewise_model_id)
+                # Wait for the model to become ACTIVE
+                model_details = self.wait_for_model_active(self.sitewise_model_id)
 
-            # Check for hierarchies only if child_ids exist
-            hierarchies = model_details.get('assetModelHierarchies', [])
-            if self.child_ids and not hierarchies:
-                _logger.error(f"No hierarchies found in the asset model: {model_details}")
-                raise ValidationError("No hierarchies found in the asset model.")
-            else:
-                for hierarchy in hierarchies:
-                    _logger.info(f"Stored Hierarchy ID for {self.name}: {hierarchy['id']}")
-                    self.sitewise_hierarchy_id = hierarchy['id']
+                # Check for hierarchies only if child_ids exist
+                hierarchies = model_details.get('assetModelHierarchies', [])
+                if self.child_ids and not hierarchies:
+                    _logger.error(f"No hierarchies found in the asset model: {model_details}")
+                    raise ValidationError("No hierarchies found in the asset model.")
+                else:
+                    for hierarchy in hierarchies:
+                        _logger.info(f"Stored Hierarchy ID for {self.name}: {hierarchy['id']}")
+                        self.sitewise_hierarchy_id = hierarchy['id']
 
-            _logger.debug("Exiting create_sitewise_model function")
-            return response
-        except client.exceptions.ResourceAlreadyExistsException:
-            raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
-        except Exception as e:
-            _logger.error(f"Error creating SiteWise model: {str(e)}")
-            raise ValidationError(f"Error creating SiteWise model: {str(e)}")
+                _logger.debug("Exiting create_sitewise_model function")
+                return response
+            except client.exceptions.ResourceAlreadyExistsException:
+                raise ValidationError(f"Asset model with name '{asset_model_payload['assetModelName']}' already exists.")
+            except Exception as e:
+                _logger.error(f"Error creating SiteWise model: {str(e)}")
+                raise ValidationError(f"Error creating SiteWise model: {str(e)}")
 
     def create_property(self, name, data_type, default_value="", external_id=None):
         """Helper to create a generic property."""
