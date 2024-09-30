@@ -175,7 +175,7 @@ class MaintenanceEquipmentCategory(models.Model):
                             {
                                 "name": variable_name,
                                 "value": {
-                                    "propertyId": property_name_to_id
+                                    "propertyId": property_name_to_id.id
                                 }
                             }
                         ]
