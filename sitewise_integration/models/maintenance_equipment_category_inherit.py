@@ -150,14 +150,12 @@ class MaintenanceEquipmentCategory(models.Model):
             if measurement_line.external_id:
                 property_dict["externalId"] = measurement_line.external_id
             asset_model_properties.append(property_dict)
-            # property_name_to_id = measurement_line.name.name
-            property_name_to_id = re.sub(r'[^a-z0-9_]', '_', measurement_line.name.name.lower())
+            property_name_to_id = measurement_line.name.name
 
         for transform_line in self.maintenance_transform_line_ids:
             if transform_line.data_type.upper() not in ['DOUBLE', 'STRING']:
                 raise ValidationError(
                     f"Invalid data type '{transform_line.data_type}' for transform '{transform_line.name.name}'. Must be 'DOUBLE' or 'STRING'.")
-            sanitized_property_name = re.sub(r'[^a-z0-9_]', '_', property_name_to_id.lower())
             property_dict = {
                 "name": transform_line.name.name,
                 "dataType": transform_line.data_type.upper(),
