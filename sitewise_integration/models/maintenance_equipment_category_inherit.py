@@ -3,6 +3,7 @@ from odoo import models, fields, api
 import logging
 import boto3
 import time
+import re
 from datetime import datetime, date
 
 _logger = logging.getLogger(__name__)
@@ -149,7 +150,8 @@ class MaintenanceEquipmentCategory(models.Model):
             if measurement_line.external_id:
                 property_dict["externalId"] = measurement_line.external_id
             asset_model_properties.append(property_dict)
-            property_name_to_id = measurement_line.name.name
+            # property_name_to_id = measurement_line.name.name
+            property_name_to_id = re.sub(r'[^a-z0-9_]', '_', measurement_line.name.name.lower())
         # Process maintenance_transform_line_ids
         for transform_line in self.maintenance_transform_line_ids:
             if transform_line.data_type.upper() not in ['DOUBLE', 'STRING']:
