@@ -170,7 +170,7 @@ class MaintenanceEquipmentCategory(models.Model):
                         },
                         "variables": [
                             {
-                                "name": "torque",
+                                "name": property_name_to_id,
                                 "value": {
                                     "propertyId": property_name_to_id
                                 }
