@@ -157,6 +157,7 @@ class MaintenanceEquipmentCategory(models.Model):
             if transform_line.data_type.upper() not in ['DOUBLE', 'STRING']:
                 raise ValidationError(
                     f"Invalid data type '{transform_line.data_type}' for transform '{transform_line.name.name}'. Must be 'DOUBLE' or 'STRING'.")
+            variable_name = re.sub(r'[^a-z0-9_]', '_', transform_line.name.name.lower())
             property_dict = {
                 "name": transform_line.name.name,
                 "dataType": transform_line.data_type.upper(),
@@ -172,7 +173,7 @@ class MaintenanceEquipmentCategory(models.Model):
                         },
                         "variables": [
                             {
-                                "name": property_name_to_id,
+                                "name": variable_name,
                                 "value": {
                                     "propertyId": property_name_to_id
                                 }
